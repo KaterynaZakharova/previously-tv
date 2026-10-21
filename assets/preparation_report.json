@@ -1,0 +1,35 @@
+{
+  "episodes": [
+    {
+      "episode_id": 1,
+      "path": "assets/tv_show/tears_of_steel/episodes/episode_01.mp4",
+      "duration": 221.002,
+      "verified": true
+    },
+    {
+      "episode_id": 2,
+      "path": "assets/tv_show/tears_of_steel/episodes/episode_02.mp4",
+      "duration": 220.0,
+      "verified": true
+    },
+    {
+      "episode_id": 3,
+      "path": "assets/tv_show/tears_of_steel/episodes/episode_03.mp4",
+      "duration": 293.0,
+      "verified": true
+    },
+    {
+      "episode_id": 4,
+      "path": "assets/cartoon/spring/movie.mp4",
+      "duration": 464.127,
+      "verified": true
+    },
+    {
+      "episode_id": 5,
+      "path": "assets/cartoon/sprite_fright/movie.mp4",
+      "duration": 629.852,
+      "verified": true
+    }
+  ],
+  "source_policy": "Database URLs first; explicit documented mirrors when enabled. Tears of Steel split exclusively from the complete movie using original_start/original_end."
+}

@@ -1,0 +1,651 @@
+{
+  "movie": "Sprite Fright",
+  "year": 2021,
+  "language": "en",
+  "timebase": "original movie",
+  "source_url": "https://commons.wikimedia.org/wiki/TimedText:Sprite_Fright_-_Blender_Open_Movie-full_movie.webm.en.srt",
+  "source_credit": "English timed captions: Wikimedia Commons contributors; Film: Blender Studio / Blender Foundation, CC BY",
+  "speaker_attribution": "Contextual / preliminary. Speaker labels are not in the source subtitles and have not been checked against video; null means unknown.",
+  "lines": [
+    {
+      "id": 1,
+      "start": "00:00:17.375",
+      "end": "00:00:19.458",
+      "text": "Hello, Mr. Snail!",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 2,
+      "start": "00:00:19.458",
+      "end": "00:00:22.333",
+      "text": "Aw, you cute little Cornu aspersum.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 3,
+      "start": "00:00:22.333",
+      "end": "00:00:25.125",
+      "text": "Latin name—bonus points!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 4,
+      "start": "00:00:28.375",
+      "end": "00:00:30.833",
+      "text": "Can’t believe we got stuck with the tree hugger.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 5,
+      "start": "00:00:30.833",
+      "end": "00:00:34.667",
+      "text": "If I have to hear the Latin name for one more animal, I swear I’m gonna kill her.",
+      "speaker": "Victoria",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 6,
+      "start": "00:00:34.667",
+      "end": "00:00:39.542",
+      "text": "Relax, Sugar Buns. While she does all the work we’ll have all the fun.",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 7,
+      "start": "00:00:39.542",
+      "end": "00:00:42.583",
+      "text": "Yeah! And get wasted out of our minds!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 8,
+      "start": "00:00:42.583",
+      "end": "00:00:44.250",
+      "text": "Way ahead of you, man.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 9,
+      "start": "00:00:44.250",
+      "end": "00:00:48.625",
+      "text": "C’mon, team! We mustn’t dilly-dally when there’s so much nature to see!",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 10,
+      "start": "00:00:48.625",
+      "end": "00:00:53.667",
+      "text": "I was thinking we should call our class project “Fungis in a Forest!”",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 11,
+      "start": "00:00:53.667",
+      "end": "00:00:56.167",
+      "text": "Get it? Because we’re a group of fun guys.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 12,
+      "start": "00:00:56.167",
+      "end": "00:00:57.667",
+      "text": "And also fungis, which—",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 13,
+      "start": "00:00:57.667",
+      "end": "00:01:02.458",
+      "text": "Shush! That’s a yellow wagtail. And she’s in distress!",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 14,
+      "start": "00:01:02.750",
+      "end": "00:01:06.333",
+      "text": "There, there, my little Motacilla flava.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 15,
+      "start": "00:01:07.792",
+      "end": "00:01:10.042",
+      "text": "Oh! Look at her go!",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 16,
+      "start": "00:01:10.375",
+      "end": "00:01:11.500",
+      "text": "Wow!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 17,
+      "start": "00:01:11.500",
+      "end": "00:01:14.417",
+      "text": "Out of the way, dorkwad! We’re camping here.",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 18,
+      "start": "00:01:14.417",
+      "end": "00:01:17.500",
+      "text": "Finally! Time to get that barbecue burning.",
+      "speaker": "Phil",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 19,
+      "start": "00:01:18.417",
+      "end": "00:01:20.167",
+      "text": "Oh. Oh, dear.",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 20,
+      "start": "00:01:27.333",
+      "end": "00:01:28.875",
+      "text": "Gross!",
+      "speaker": "Victoria",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 21,
+      "start": "00:01:30.833",
+      "end": "00:01:35.458",
+      "text": "Oh. Easy, guys. We’re supposed to be studying nature, not wrecking it.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 22,
+      "start": "00:01:35.458",
+      "end": "00:01:37.958",
+      "text": "Piss break!",
+      "speaker": "Jay",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 23,
+      "start": "00:01:40.708",
+      "end": "00:01:44.667",
+      "text": "Oi, fungus freak! Make yourself useful and fix the tent.",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 24,
+      "start": "00:01:44.667",
+      "end": "00:01:48.917",
+      "text": "Oh, a bit of friendly campsite ribbing. Fun.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 25,
+      "start": "00:01:49.875",
+      "end": "00:01:52.583",
+      "text": "She wouldn’t survive five minutes alone in these woods.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 26,
+      "start": "00:01:52.583",
+      "end": "00:01:56.792",
+      "text": "Yeah. She’s a real weenie that one, innit?",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 27,
+      "start": "00:01:56.792",
+      "end": "00:01:59.000",
+      "text": "Oi, Phil! How those sausages coming?",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 28,
+      "start": "00:01:59.000",
+      "end": "00:02:02.458",
+      "text": "Almost ready! Just need a bit more salt...",
+      "speaker": "Phil",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 29,
+      "start": "00:02:36.333",
+      "end": "00:02:39.208",
+      "text": "It’s incredible. It’s a new species.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 30,
+      "start": "00:02:39.208",
+      "end": "00:02:41.875",
+      "text": "What the bloody hell are those things?",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 31,
+      "start": "00:02:41.875",
+      "end": "00:02:44.542",
+      "text": "It’s like a gnome shagged a mushroom.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 32,
+      "start": "00:02:57.375",
+      "end": "00:02:59.583",
+      "text": "They’re absolutely adorable.",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 33,
+      "start": "00:02:59.583",
+      "end": "00:03:02.000",
+      "text": "Yeah, absolutely bloody adorable.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 34,
+      "start": "00:03:02.000",
+      "end": "00:03:05.625",
+      "text": "And I bet we’ll make a fortune if we catch one of those things.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 35,
+      "start": "00:03:05.625",
+      "end": "00:03:06.958",
+      "text": "We’d be famous!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 36,
+      "start": "00:03:06.958",
+      "end": "00:03:08.292",
+      "text": "Get on MTV.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 37,
+      "start": "00:03:08.292",
+      "end": "00:03:09.875",
+      "text": "I wonder what they taste like.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 38,
+      "start": "00:03:09.875",
+      "end": "00:03:12.500",
+      "text": "We really shouldn’t disrupt their habitat.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 39,
+      "start": "00:03:12.500",
+      "end": "00:03:15.917",
+      "text": "Right. Sure, sure.",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 40,
+      "start": "00:03:15.917",
+      "end": "00:03:17.500",
+      "text": "Greetings.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 41,
+      "start": "00:03:17.500",
+      "end": "00:03:19.000",
+      "text": "Welcome, friends.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 42,
+      "start": "00:03:19.000",
+      "end": "00:03:21.208",
+      "text": "I’ll be right down.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 43,
+      "start": "00:03:26.250",
+      "end": "00:03:28.750",
+      "text": "Could I interest you in some peppermint tea?",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 44,
+      "start": "00:03:28.750",
+      "end": "00:03:30.667",
+      "text": "What are you guys?",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 45,
+      "start": "00:03:30.667",
+      "end": "00:03:34.417",
+      "text": "We are sprites. We sprite balance to the forest.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 46,
+      "start": "00:03:34.417",
+      "end": "00:03:39.667",
+      "text": "We take care of the animals, plants, birds, moss…",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 47,
+      "start": "00:03:41.000",
+      "end": "00:03:43.917",
+      "text": "Guys? Guys, I…",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 48,
+      "start": "00:03:46.583",
+      "end": "00:03:51.542",
+      "text": "Hey, uh, little mushroom geezer, you cool with us camping here for the night?",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 49,
+      "start": "00:03:51.542",
+      "end": "00:03:56.333",
+      "text": "Absolutely. A friend of the forest is a friend of the sprites.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 50,
+      "start": "00:03:57.708",
+      "end": "00:04:01.375",
+      "text": "Maybe it was just ketchup… or something… like…",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 51,
+      "start": "00:04:01.375",
+      "end": "00:04:09.125",
+      "text": "Red paint? Yeah, maybe they were just painting their little hats or... something...",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 52,
+      "start": "00:04:15.500",
+      "end": "00:04:17.041",
+      "text": "Guys?",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 53,
+      "start": "00:04:20.083",
+      "end": "00:04:21.625",
+      "text": "Guys?",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 54,
+      "start": "00:04:22.417",
+      "end": "00:04:23.957",
+      "text": "Guys, this isn’t funny.",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 55,
+      "start": "00:04:25.083",
+      "end": "00:04:26.625",
+      "text": "Guys?",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 56,
+      "start": "00:04:47.208",
+      "end": "00:04:50.167",
+      "text": "We were just gonna catch one! But they’re psycho!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 57,
+      "start": "00:04:50.167",
+      "end": "00:04:52.957",
+      "text": "You gotta get me outta these! Hurry! They’re gonna kill us!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 58,
+      "start": "00:04:55.667",
+      "end": "00:04:56.582",
+      "text": "Hurry!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 59,
+      "start": "00:04:56.583",
+      "end": "00:04:59.458",
+      "text": "Right foot, left foot, leaf and stone.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 60,
+      "start": "00:04:59.458",
+      "end": "00:05:03.583",
+      "text": "You picked the wrong camping spot, bitches.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 61,
+      "start": "00:05:03.583",
+      "end": "00:05:05.292",
+      "text": "Sprite them!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 62,
+      "start": "00:05:05.833",
+      "end": "00:05:07.542",
+      "text": "Run!",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 63,
+      "start": "00:05:30.250",
+      "end": "00:05:32.083",
+      "text": "Aaaah! My eyes!",
+      "speaker": null,
+      "speaker_confidence": "unverified"
+    },
+    {
+      "id": 64,
+      "start": "00:05:57.625",
+      "end": "00:05:59.625",
+      "text": "Sugar Buns! Help me!",
+      "speaker": "Victoria",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 65,
+      "start": "00:06:07.125",
+      "end": "00:06:08.875",
+      "text": "Sweet cakes!",
+      "speaker": "Rex",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 66,
+      "start": "00:06:11.292",
+      "end": "00:06:13.207",
+      "text": "Love muffin...",
+      "speaker": "Rex",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 67,
+      "start": "00:06:14.167",
+      "end": "00:06:15.667",
+      "text": "Huh?",
+      "speaker": "Rex",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 68,
+      "start": "00:06:40.042",
+      "end": "00:06:43.457",
+      "text": "No, no, no! I can’t swim!",
+      "speaker": "Jay",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 69,
+      "start": "00:06:55.083",
+      "end": "00:06:56.875",
+      "text": "Yes!",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 70,
+      "start": "00:06:58.292",
+      "end": "00:06:59.707",
+      "text": "No!",
+      "speaker": "Ellie",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 71,
+      "start": "00:07:06.359",
+      "end": "00:07:08.140",
+      "text": "Son of a spriteberry!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 72,
+      "start": "00:07:08.141",
+      "end": "00:07:09.608",
+      "text": "It burns! It burns!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "tentative"
+    },
+    {
+      "id": 73,
+      "start": "00:07:12.833",
+      "end": "00:07:16.208",
+      "text": "I don’t want to hurt you! Just keep your distance!",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 74,
+      "start": "00:07:17.208",
+      "end": "00:07:21.125",
+      "text": "All right, then. Eat salt, you little green bastards!",
+      "speaker": "Ellie",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 75,
+      "start": "00:07:56.833",
+      "end": "00:07:58.542",
+      "text": "Nuh-uh-uh.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 76,
+      "start": "00:07:58.542",
+      "end": "00:08:03.332",
+      "text": "Those punks treated the world as their own personal rubbish bin.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 77,
+      "start": "00:08:03.333",
+      "end": "00:08:05.625",
+      "text": "And you set them free!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 78,
+      "start": "00:08:05.625",
+      "end": "00:08:07.833",
+      "text": "Now you’ll join them!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 79,
+      "start": "00:08:45.875",
+      "end": "00:08:49.167",
+      "text": "I’ll give you that one, brother bird!",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    },
+    {
+      "id": 80,
+      "start": "00:08:50.000",
+      "end": "00:08:55.417",
+      "text": "Alright, sprites, let’s burn the bodies and have some peppermint tea.",
+      "speaker": "Elder Sprite",
+      "speaker_confidence": "probable"
+    }
+  ]
+}

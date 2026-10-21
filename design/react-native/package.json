@@ -1,0 +1,5 @@
+{
+  "name": "@previously/tv-icons", "version": "1.0.0", "private": true,
+  "description": "Optional React Native icon adapter; not the WebView app entry point",
+  "peerDependencies": {"react": ">=18", "react-native": ">=0.72", "react-native-feather": "^2.0.0", "react-native-svg": ">=12"}
+}

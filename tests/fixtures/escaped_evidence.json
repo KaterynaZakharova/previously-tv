@@ -1,0 +1,90 @@
+{
+  "cast": [
+    {
+      "id": "thom",
+      "name": "Thom",
+      "actor": "Vanja Rukavina / Derek de Lint",
+      "identity_hint": "Thom is played at younger and older ages; Young Thom and Old Thom refer to the same character."
+    },
+    {
+      "id": "celia",
+      "name": "Celia",
+      "actor": "Denise Rebergen",
+      "identity_hint": "Celia is the character with a robotic hand."
+    }
+  ],
+  "cues": [
+    {
+      "id": 4,
+      "start": 30.8,
+      "end": 34.0,
+      "text": "Why don't you just admit that you're freaked out by my robot hand?"
+    },
+    {
+      "id": 5,
+      "start": 34.5,
+      "end": 36.0,
+      "text": "I'm not freaked out by- it's..."
+    },
+    {
+      "id": 6,
+      "start": 37.0,
+      "end": 38.0,
+      "text": "...alright! Fine!"
+    },
+    {
+      "id": 7,
+      "start": 38.0,
+      "end": 41.0,
+      "text": "I'm freaked out! I have nightmares that I'm being chased..."
+    },
+    {
+      "id": 8,
+      "start": 41.0,
+      "end": 42.0,
+      "text": "...by these giant robotic claws of death..."
+    }
+  ],
+  "answer": {
+    "events": [
+      {
+        "title": "Thom Confesses Fear of Robot Hand",
+        "summary": "Thom admits he is terrified of his own robotic hand, revealing a personal vulnerability that may influence future actions.",
+        "category": "critical",
+        "why": "This revelation about Thom’s fear is a key character detail that could affect his decisions later.",
+        "characters": [
+          "thom",
+          "celia"
+        ],
+        "threads": [
+          "thom",
+          "celia"
+        ],
+        "location": "Not stated",
+        "evidence": "\"I'm freaked out! I have nightmares that I'm being chased...by these giant robotic claws of death...\"",
+        "ranges": [
+          {
+            "first": 4,
+            "last": 8
+          }
+        ],
+        "relationships": [
+          {
+            "source": "thom",
+            "target": "celia",
+            "label": "confession",
+            "explanation": "Thom openly shares his fear with Celia, indicating a close enough relationship to discuss personal anxieties."
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "first": 4,
+        "last": 8,
+        "category": "critical",
+        "why": "Supported by selected test cues"
+      }
+    ]
+  }
+}

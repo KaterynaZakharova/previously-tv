@@ -1,0 +1,123 @@
+{
+  "episode_id": 3,
+  "media_id": 1,
+  "title": "The Last Chance",
+  "timebase": "HH:MM:SS.mmm",
+  "episode_offset_seconds": 441,
+  "original_start": "00:07:21.000",
+  "original_end": "00:12:14.000",
+  "subtitles_source": "https://commons.wikimedia.org/wiki/TimedText:Tears_of_Steel_1080p.webm.en.srt",
+  "speaker_attribution": "Best effort from cast and published screenplay/plot; ambiguous voices left null. Not verified against original audio.",
+  "lines": [
+    {
+      "id": 67,
+      "start": "00:08:13.000",
+      "end": "00:08:14.000",
+      "episode_start": "00:00:52.000",
+      "episode_end": "00:00:53.000",
+      "text": "Come on!",
+      "character_id": 2,
+      "speaker": "Barley",
+      "speaker_confidence": "inferred"
+    },
+    {
+      "id": 68,
+      "start": "00:08:22.000",
+      "end": "00:08:24.000",
+      "episode_start": "00:01:01.000",
+      "episode_end": "00:01:03.000",
+      "text": "RAAAAAAAH!",
+      "character_id": 2,
+      "speaker": "Barley",
+      "speaker_confidence": "inferred"
+    },
+    {
+      "id": 69,
+      "start": "00:08:24.000",
+      "end": "00:08:25.000",
+      "episode_start": "00:01:03.000",
+      "episode_end": "00:01:04.000",
+      "text": "Memory overwrite, 90%.",
+      "character_id": 7,
+      "speaker": "Techhead",
+      "speaker_confidence": "high"
+    },
+    {
+      "id": 70,
+      "start": "00:08:26.000",
+      "end": "00:08:28.000",
+      "episode_start": "00:01:05.000",
+      "episode_end": "00:01:07.000",
+      "text": "Captain! We have to abort!",
+      "character_id": 7,
+      "speaker": "Techhead",
+      "speaker_confidence": "high"
+    },
+    {
+      "id": 71,
+      "start": "00:08:38.000",
+      "end": "00:08:40.000",
+      "episode_start": "00:01:17.000",
+      "episode_end": "00:01:19.000",
+      "text": "The world's changed, Celia...",
+      "character_id": 4,
+      "speaker": "Thom (young)",
+      "speaker_confidence": "high"
+    },
+    {
+      "id": 72,
+      "start": "00:08:54.000",
+      "end": "00:08:56.000",
+      "episode_start": "00:01:33.000",
+      "episode_end": "00:01:35.000",
+      "text": "...maybe we can too.",
+      "character_id": 1,
+      "speaker": "Thom (older)",
+      "speaker_confidence": "high"
+    },
+    {
+      "id": 73,
+      "start": "00:08:58.000",
+      "end": "00:08:59.000",
+      "episode_start": "00:01:37.000",
+      "episode_end": "00:01:38.000",
+      "text": "Memory overwrite complete!",
+      "character_id": 7,
+      "speaker": "Techhead",
+      "speaker_confidence": "high"
+    },
+    {
+      "id": 74,
+      "start": "00:09:19.000",
+      "end": "00:09:20.000",
+      "episode_start": "00:01:58.000",
+      "episode_end": "00:01:59.000",
+      "text": "You know.",
+      "character_id": 3,
+      "speaker": "Captain",
+      "speaker_confidence": "inferred"
+    },
+    {
+      "id": 75,
+      "start": "00:09:22.000",
+      "end": "00:09:24.000",
+      "episode_start": "00:02:01.000",
+      "episode_end": "00:02:03.000",
+      "text": "There's a lesson to be learned from this.",
+      "character_id": 3,
+      "speaker": "Captain",
+      "speaker_confidence": "inferred"
+    },
+    {
+      "id": 76,
+      "start": "00:09:26.000",
+      "end": "00:09:27.000",
+      "episode_start": "00:02:05.000",
+      "episode_end": "00:02:06.000",
+      "text": "Could'a gone worse.",
+      "character_id": null,
+      "speaker": null,
+      "speaker_confidence": "unidentified"
+    }
+  ]
+}

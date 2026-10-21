@@ -1,0 +1,110 @@
+{
+  "keyless_model_calls": 0,
+  "real_ffmpeg_cuts": [
+    {
+      "unit": "tears_of_steel_e01",
+      "prepared_actions": 17,
+      "prepared_moments": 11,
+      "selected": "Argument on the Bridge",
+      "edit_seconds": 13.0,
+      "encoded_seconds": 13.021333,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "unit": "tears_of_steel_e02",
+      "prepared_actions": 19,
+      "prepared_moments": 11,
+      "selected": "Captain's Advice",
+      "edit_seconds": 25.0,
+      "encoded_seconds": 25.020996,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "unit": "tears_of_steel_e03",
+      "prepared_actions": 14,
+      "prepared_moments": 11,
+      "selected": "Assembling the Robot",
+      "edit_seconds": 18.263,
+      "encoded_seconds": 18.312663,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "unit": "spring_e01",
+      "prepared_actions": 25,
+      "prepared_moments": 22,
+      "selected": "Girl and dog on mountain peak",
+      "edit_seconds": 8.427,
+      "encoded_seconds": 8.479329,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    },
+    {
+      "unit": "sprite_fright_e01",
+      "prepared_actions": 35,
+      "prepared_moments": 27,
+      "selected": "Ellie discovers Mr. Snail",
+      "edit_seconds": 14.532,
+      "encoded_seconds": 14.562663,
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ]
+    }
+  ],
+  "partial_spring_http": {
+    "status": "PASS",
+    "transcript_cues": 0,
+    "seen_seconds": 150,
+    "generated_clips": 5,
+    "durations": [
+      8.427,
+      14.66,
+      12.615,
+      35.602,
+      10.8
+    ],
+    "memory_feedback": "PASS"
+  },
+  "notes": "No browser rendering, Android build or physical Fire TV testing was performed in this environment."
+}

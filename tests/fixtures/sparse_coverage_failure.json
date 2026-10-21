@@ -1,0 +1,626 @@
+{
+  "cues": [
+    {
+      "id": 34,
+      "start": 296.5,
+      "end": 298.0,
+      "text": "Memory overwrite in progress!",
+      "start_timecode": "00:04:56.500",
+      "end_timecode": "00:04:58.000"
+    },
+    {
+      "id": 35,
+      "start": 299.0,
+      "end": 301.0,
+      "text": "You're a jerk, Thom!",
+      "start_timecode": "00:04:59.000",
+      "end_timecode": "00:05:01.000"
+    },
+    {
+      "id": 36,
+      "start": 302.5,
+      "end": 305.0,
+      "text": "Ohp- Sorry! Sorry.",
+      "start_timecode": "00:05:02.500",
+      "end_timecode": "00:05:05.000"
+    },
+    {
+      "id": 37,
+      "start": 316.0,
+      "end": 317.0,
+      "text": "Look Celia.",
+      "start_timecode": "00:05:16.000",
+      "end_timecode": "00:05:17.000"
+    },
+    {
+      "id": 38,
+      "start": 318.0,
+      "end": 320.0,
+      "text": "We have to follow our passions.",
+      "start_timecode": "00:05:18.000",
+      "end_timecode": "00:05:20.000"
+    },
+    {
+      "id": 39,
+      "start": 321.0,
+      "end": 323.0,
+      "text": "You have your robotics...",
+      "start_timecode": "00:05:21.000",
+      "end_timecode": "00:05:23.000"
+    },
+    {
+      "id": 40,
+      "start": 325.0,
+      "end": 328.0,
+      "text": "...and I just want to be awesome in space.",
+      "start_timecode": "00:05:25.000",
+      "end_timecode": "00:05:28.000"
+    },
+    {
+      "id": 41,
+      "start": 339.0,
+      "end": 341.0,
+      "text": "Okay, they're coming. Two minutes left!",
+      "start_timecode": "00:05:39.000",
+      "end_timecode": "00:05:41.000"
+    },
+    {
+      "id": 42,
+      "start": 343.0,
+      "end": 344.0,
+      "text": "Speed it up, Thom!",
+      "start_timecode": "00:05:43.000",
+      "end_timecode": "00:05:44.000"
+    },
+    {
+      "id": 43,
+      "start": 345.0,
+      "end": 346.0,
+      "text": "Vivacissimo!",
+      "start_timecode": "00:05:45.000",
+      "end_timecode": "00:05:46.000"
+    },
+    {
+      "id": 44,
+      "start": 347.0,
+      "end": 350.0,
+      "text": "Why don't you just admit that you're  freaked out by my robot hand?",
+      "start_timecode": "00:05:47.000",
+      "end_timecode": "00:05:50.000"
+    },
+    {
+      "id": 45,
+      "start": 356.0,
+      "end": 359.0,
+      "text": "Listen Celia, I was young...",
+      "start_timecode": "00:05:56.000",
+      "end_timecode": "00:05:59.000"
+    },
+    {
+      "id": 46,
+      "start": 359.5,
+      "end": 361.0,
+      "text": "...and a dick.",
+      "start_timecode": "00:05:59.500",
+      "end_timecode": "00:06:01.000"
+    },
+    {
+      "id": 47,
+      "start": 361.0,
+      "end": 363.0,
+      "text": "But that's no reason to destroy the world.",
+      "start_timecode": "00:06:01.000",
+      "end_timecode": "00:06:03.000"
+    },
+    {
+      "id": 48,
+      "start": 365.0,
+      "end": 366.0,
+      "text": "Why does he do this?",
+      "start_timecode": "00:06:05.000",
+      "end_timecode": "00:06:06.000"
+    },
+    {
+      "id": 49,
+      "start": 366.5,
+      "end": 368.5,
+      "text": "We already tried that one!",
+      "start_timecode": "00:06:06.500",
+      "end_timecode": "00:06:08.500"
+    },
+    {
+      "id": 50,
+      "start": 371.5,
+      "end": 372.5,
+      "text": "Abort!",
+      "start_timecode": "00:06:11.500",
+      "end_timecode": "00:06:12.500"
+    },
+    {
+      "id": 51,
+      "start": 373.0,
+      "end": 374.0,
+      "text": "Cut!",
+      "start_timecode": "00:06:13.000",
+      "end_timecode": "00:06:14.000"
+    },
+    {
+      "id": 52,
+      "start": 374.0,
+      "end": 375.0,
+      "text": "Whoaaa!",
+      "start_timecode": "00:06:14.000",
+      "end_timecode": "00:06:15.000"
+    },
+    {
+      "id": 53,
+      "start": 379.0,
+      "end": 380.0,
+      "text": "Whoaaa!",
+      "start_timecode": "00:06:19.000",
+      "end_timecode": "00:06:20.000"
+    },
+    {
+      "id": 54,
+      "start": 381.0,
+      "end": 383.0,
+      "text": "Nooooo!",
+      "start_timecode": "00:06:21.000",
+      "end_timecode": "00:06:23.000"
+    },
+    {
+      "id": 55,
+      "start": 383.0,
+      "end": 385.0,
+      "text": "You broke my heart.",
+      "start_timecode": "00:06:23.000",
+      "end_timecode": "00:06:25.000"
+    },
+    {
+      "id": 56,
+      "start": 386.0,
+      "end": 387.0,
+      "text": "I know.",
+      "start_timecode": "00:06:26.000",
+      "end_timecode": "00:06:27.000"
+    },
+    {
+      "id": 57,
+      "start": 387.0,
+      "end": 389.0,
+      "text": "You forgot me on earth.",
+      "start_timecode": "00:06:27.000",
+      "end_timecode": "00:06:29.000"
+    },
+    {
+      "id": 58,
+      "start": 389.0,
+      "end": 390.0,
+      "text": "I know.",
+      "start_timecode": "00:06:29.000",
+      "end_timecode": "00:06:30.000"
+    },
+    {
+      "id": 59,
+      "start": 390.5,
+      "end": 393.0,
+      "text": "I should just crush you.",
+      "start_timecode": "00:06:30.500",
+      "end_timecode": "00:06:33.000"
+    },
+    {
+      "id": 60,
+      "start": 396.0,
+      "end": 397.0,
+      "text": "I'm-",
+      "start_timecode": "00:06:36.000",
+      "end_timecode": "00:06:37.000"
+    },
+    {
+      "id": 61,
+      "start": 407.0,
+      "end": 408.0,
+      "text": "I'm sorry.",
+      "start_timecode": "00:06:47.000",
+      "end_timecode": "00:06:48.000"
+    },
+    {
+      "id": 62,
+      "start": 410.0,
+      "end": 411.0,
+      "text": "Good ad-lib.",
+      "start_timecode": "00:06:50.000",
+      "end_timecode": "00:06:51.000"
+    },
+    {
+      "id": 63,
+      "start": 419.0,
+      "end": 420.5,
+      "text": "Not my fault!",
+      "start_timecode": "00:06:59.000",
+      "end_timecode": "00:07:00.500"
+    },
+    {
+      "id": 64,
+      "start": 422.0,
+      "end": 423.0,
+      "text": "This time.",
+      "start_timecode": "00:07:02.000",
+      "end_timecode": "00:07:03.000"
+    },
+    {
+      "id": 65,
+      "start": 428.0,
+      "end": 429.5,
+      "text": "Quiet on set!",
+      "start_timecode": "00:07:08.000",
+      "end_timecode": "00:07:09.500"
+    },
+    {
+      "id": 66,
+      "start": 430.0,
+      "end": 431.0,
+      "text": "We're out of time!",
+      "start_timecode": "00:07:10.000",
+      "end_timecode": "00:07:11.000"
+    },
+    {
+      "id": 67,
+      "start": 493.0,
+      "end": 494.0,
+      "text": "Come on!",
+      "start_timecode": "00:08:13.000",
+      "end_timecode": "00:08:14.000"
+    },
+    {
+      "id": 68,
+      "start": 502.0,
+      "end": 504.0,
+      "text": "RAAAAAAAAH!",
+      "start_timecode": "00:08:22.000",
+      "end_timecode": "00:08:24.000"
+    },
+    {
+      "id": 69,
+      "start": 504.0,
+      "end": 505.0,
+      "text": "Memory overwrite, 90%.",
+      "start_timecode": "00:08:24.000",
+      "end_timecode": "00:08:25.000"
+    },
+    {
+      "id": 70,
+      "start": 506.0,
+      "end": 508.0,
+      "text": "Captain! We have to abort!",
+      "start_timecode": "00:08:26.000",
+      "end_timecode": "00:08:28.000"
+    },
+    {
+      "id": 71,
+      "start": 518.0,
+      "end": 520.0,
+      "text": "The world's changed, Celia...",
+      "start_timecode": "00:08:38.000",
+      "end_timecode": "00:08:40.000"
+    },
+    {
+      "id": 72,
+      "start": 534.0,
+      "end": 536.0,
+      "text": "...maybe we can too.",
+      "start_timecode": "00:08:54.000",
+      "end_timecode": "00:08:56.000"
+    },
+    {
+      "id": 73,
+      "start": 538.0,
+      "end": 539.0,
+      "text": "Memory overwrite complete!",
+      "start_timecode": "00:08:58.000",
+      "end_timecode": "00:08:59.000"
+    },
+    {
+      "id": 74,
+      "start": 559.0,
+      "end": 560.0,
+      "text": "You know.",
+      "start_timecode": "00:09:19.000",
+      "end_timecode": "00:09:20.000"
+    },
+    {
+      "id": 75,
+      "start": 562.0,
+      "end": 564.0,
+      "text": "There's a lesson to be learned from this.",
+      "start_timecode": "00:09:22.000",
+      "end_timecode": "00:09:24.000"
+    },
+    {
+      "id": 76,
+      "start": 566.0,
+      "end": 567.0,
+      "text": "Could'a gone worse.",
+      "start_timecode": "00:09:26.000",
+      "end_timecode": "00:09:27.000"
+    }
+  ],
+  "cast_ids": [
+    "thom",
+    "celia",
+    "captain",
+    "barley",
+    "tech_head",
+    "djenghis"
+  ],
+  "attempts": [
+    {
+      "events": [
+        {
+          "title": "Memory overwrite begins",
+          "summary": "The crew initiates the overwrite of the robot’s memory, setting the technical operation in motion.",
+          "category": "critical",
+          "why": "This is the trigger for the operation and establishes the technical context.",
+          "characters": [
+            "captain",
+            "tech_head",
+            "thom"
+          ],
+          "threads": [
+            "technical operation"
+          ],
+          "location": "Not stated",
+          "evidence": "Memory overwrite in progress!",
+          "ranges": [
+            {
+              "first": 34,
+              "last": 34
+            }
+          ],
+          "relationships": []
+        },
+        {
+          "title": "Thom’s apology and self‑reflection",
+          "summary": "Thom apologizes for his earlier harshness and reveals his past, explaining his fear of Celia’s robotic hand.",
+          "category": "critical",
+          "why": "This dialogue explains Thom’s motivation and emotional state, crucial for understanding his later actions.",
+          "characters": [
+            "thom",
+            "celia"
+          ],
+          "threads": [
+            "personal conflict"
+          ],
+          "location": "Not stated",
+          "evidence": "Ohp- Sorry! Sorry.",
+          "ranges": [
+            {
+              "first": 36,
+              "last": 36
+            }
+          ],
+          "relationships": [
+            {
+              "source": "thom",
+              "target": "celia",
+              "label": "fear",
+              "explanation": "Thom’s apology follows his earlier insult, indicating his discomfort with Celia’s robotic hand."
+            }
+          ]
+        },
+        {
+          "title": "Crew prepares to abort",
+          "summary": "The crew realizes the operation is failing and decides to abort, highlighting the tension and stakes.",
+          "category": "critical",
+          "why": "The decision to abort marks a pivotal change in the operation’s outcome.",
+          "characters": [
+            "captain",
+            "thom",
+            "celia"
+          ],
+          "threads": [
+            "technical operation",
+            "crew dynamics"
+          ],
+          "location": "Not stated",
+          "evidence": "Abort!",
+          "ranges": [
+            {
+              "first": 50,
+              "last": 50
+            }
+          ],
+          "relationships": [
+            {
+              "source": "captain",
+              "target": "thom",
+              "label": "command",
+              "explanation": "Captain’s order to abort directs Thom’s actions."
+            }
+          ]
+        },
+        {
+          "title": "Memory overwrite completes",
+          "summary": "The overwrite finishes, confirming the technical operation’s success despite earlier setbacks.",
+          "category": "secondary",
+          "why": "This confirms the technical goal and sets up the aftermath.",
+          "characters": [
+            "captain",
+            "tech_head",
+            "thom"
+          ],
+          "threads": [
+            "technical operation"
+          ],
+          "location": "Not stated",
+          "evidence": "Memory overwrite complete!",
+          "ranges": [
+            {
+              "first": 73,
+              "last": 73
+            }
+          ],
+          "relationships": []
+        }
+      ],
+      "coverage": [
+        {
+          "first": 34,
+          "last": 34,
+          "category": "critical",
+          "why": "Start of overwrite"
+        },
+        {
+          "first": 35,
+          "last": 36,
+          "category": "critical",
+          "why": "Thom’s apology"
+        },
+        {
+          "first": 37,
+          "last": 44,
+          "category": "secondary",
+          "why": "Dialogue context"
+        },
+        {
+          "first": 45,
+          "last": 49,
+          "category": "filler",
+          "why": "Background chatter"
+        },
+        {
+          "first": 50,
+          "last": 53,
+          "category": "critical",
+          "why": "Abort decision"
+        },
+        {
+          "first": 54,
+          "last": 70,
+          "category": "filler",
+          "why": "Post‑abort dialogue"
+        },
+        {
+          "first": 71,
+          "last": 73,
+          "category": "secondary",
+          "why": "Wrap‑up of overwrite"
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "title": "Memory overwrite begins",
+          "summary": "The crew initiates the overwrite of the robot’s memory, setting the technical operation in motion.",
+          "category": "critical",
+          "why": "This is the trigger for the operation and establishes the technical context.",
+          "characters": [
+            "tech_head"
+          ],
+          "threads": [],
+          "location": "Not stated",
+          "evidence": "Memory overwrite in progress!",
+          "ranges": [
+            {
+              "first": 34,
+              "last": 34
+            }
+          ],
+          "relationships": []
+        },
+        {
+          "title": "Thom insults Celia",
+          "summary": "Thom verbally attacks Celia, provoking tension between them.",
+          "category": "critical",
+          "why": "The insult creates conflict that drives the emotional stakes of the scene.",
+          "characters": [
+            "thom",
+            "celia"
+          ],
+          "threads": [],
+          "location": "Not stated",
+          "evidence": "You're a jerk, Thom!",
+          "ranges": [
+            {
+              "first": 35,
+              "last": 35
+            }
+          ],
+          "relationships": [
+            {
+              "source": "thom",
+              "target": "celia",
+              "label": "insult",
+              "explanation": "Thom verbally attacks Celia."
+            }
+          ]
+        },
+        {
+          "title": "Thom apologizes",
+          "summary": "Thom offers a brief apology after his insult.",
+          "category": "secondary",
+          "why": "The apology attempts to mitigate the conflict but does not resolve it.",
+          "characters": [
+            "thom"
+          ],
+          "threads": [],
+          "location": "Not stated",
+          "evidence": "Ohp- Sorry! Sorry.",
+          "ranges": [
+            {
+              "first": 36,
+              "last": 36
+            }
+          ],
+          "relationships": []
+        },
+        {
+          "title": "Celia explains her robotics and ambition",
+          "summary": "Celia discusses her robotic hand and her desire to be awesome in space, revealing her motivations.",
+          "category": "critical",
+          "why": "This dialogue establishes Celia’s character goals and the tension with Thom’s perspective.",
+          "characters": [
+            "celia"
+          ],
+          "threads": [],
+          "location": "Not stated",
+          "evidence": "You have your robotics... and I just want to be awesome in space.",
+          "ranges": [
+            {
+              "first": 39,
+              "last": 40
+            }
+          ],
+          "relationships": []
+        }
+      ],
+      "coverage": [
+        {
+          "first": 34,
+          "last": 34,
+          "category": "critical",
+          "why": "Memory overwrite start."
+        },
+        {
+          "first": 35,
+          "last": 35,
+          "category": "critical",
+          "why": "Thom insults Celia."
+        },
+        {
+          "first": 36,
+          "last": 36,
+          "category": "secondary",
+          "why": "Thom apologizes."
+        },
+        {
+          "first": 39,
+          "last": 40,
+          "category": "critical",
+          "why": "Celia explains her robotics and ambition."
+        }
+      ]
+    }
+  ]
+}

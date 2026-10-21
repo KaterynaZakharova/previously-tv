@@ -1,0 +1,38 @@
+{
+  "react_native_feather": {
+    "repository": "https://github.com/yigithanyucedag/react-native-feather",
+    "commit": "433b7469020cba7a64d007c54b14b51e98a3bd25",
+    "icons": [
+      "Play",
+      "Pause",
+      "SkipBack",
+      "SkipForward",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Info",
+      "GitMerge",
+      "MoreHorizontal",
+      "X",
+      "RotateCcw",
+      "Check",
+      "HelpCircle",
+      "ChevronDown",
+      "Home",
+      "Tv",
+      "Film",
+      "User",
+      "ExternalLink",
+      "List",
+      "RefreshCw",
+      "AlertCircle"
+    ]
+  },
+  "font": {
+    "family": "Manrope",
+    "license": "SIL OFL 1.1",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/Manrope%5Bwght%5D.ttf",
+    "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+  }
+}

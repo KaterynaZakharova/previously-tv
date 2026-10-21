@@ -1,0 +1,31 @@
+{
+  "browser": "Chromium",
+  "physical_fire_tv": false,
+  "body_1080_css_px": 28,
+  "bundled_font": true,
+  "sizes": [
+    {
+      "width": 1280,
+      "height": 720,
+      "body_css_px": 18.6667
+    },
+    {
+      "width": 960,
+      "height": 540,
+      "body_css_px": 14
+    }
+  ],
+  "uncaught_errors": [],
+  "verified": [
+    "local Feather hydration",
+    "dynamic episode icons",
+    "fullscreen top layer",
+    "play/pause icon and accessible name",
+    "idle controls hide",
+    "native bridge reveals controls",
+    "real source and recap playback",
+    "map overlay",
+    "source resume",
+    "no horizontal overflow"
+  ]
+}
