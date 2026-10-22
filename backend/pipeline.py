@@ -677,7 +677,7 @@ class Pipeline:
         return dict(items=items,explanation=explanation,model=self.ai.model,provider=getattr(self.ai,'label','AI'),total_seconds=round(sum(x['duration'] for x in items),2))
 
     def render(self,video,folder,ranges,progress=lambda *args:None):
-        key=hashlib.sha256((str(video)+json.dumps(ranges,sort_keys=True)).encode()).hexdigest()[:24]
+        key=hashlib.sha256(('tv-h264-v1|'+str(video)+json.dumps(ranges,sort_keys=True)).encode()).hexdigest()[:24]
         output=folder/'clips'/f'{key}.mp4';output.parent.mkdir(parents=True,exist_ok=True)
         with self.lock('render_'+key):
             if not output.is_file():
@@ -688,7 +688,9 @@ class Pipeline:
                         part=output.parent/f'{key}-{n}.part.mp4';parts.append(part)
                         command=['ffmpeg','-nostdin','-hide_banner','-loglevel','error','-y','-ss',str(r['start']),'-i',str(video),'-t',str(r['end']-r['start']),
                                  '-map','0:v:0','-map','0:a:0?','-vf','scale=960:540:force_original_aspect_ratio=decrease,pad=960:540:(ow-iw)/2:(oh-ih)/2,setsar=1',
-                                 '-c:v','libx264','-preset','veryfast','-crf','23','-pix_fmt','yuv420p','-r','24','-c:a','aac','-ar','48000','-ac','2','-movflags','+faststart',str(part)]
+                                 '-c:v','libx264','-preset','veryfast','-crf','23','-profile:v','baseline','-level:v','3.1',
+                                 '-maxrate','1600k','-bufsize','3200k','-g','48','-keyint_min','48','-sc_threshold','0','-bf','0',
+                                 '-threads','2','-pix_fmt','yuv420p','-r','24','-c:a','aac','-b:a','96k','-ar','48000','-ac','2','-movflags','+faststart',str(part)]
                         run=subprocess.run(command,capture_output=True,text=True,timeout=180)
                         if run.returncode:raise ValueError('FFmpeg cut failed: '+run.stderr[-350:])
                     listing=output.parent/f'{key}.concat.txt'

@@ -12,3 +12,8 @@
 @keyframes feed-spin{to{transform:rotate(360deg)}}
 @media(max-width:700px){#feed-video{left:7vw;width:86vw}.feed-return>span{display:none}.feed-toolbar{gap:.3rem}.feed-toolbar>button{height:2.5rem;width:2.5rem;min-width:2.5rem}.feed-toolbar{bottom:8vh}.feed-overlay{max-width:94vw;padding:1.3rem}.feed-empty{inset:20vh 7vw}.feed-empty h2{font-size:1.8rem}.feed-map{padding:1rem}.feed-error{left:7vw;right:7vw}.tv-transport .previously-transport>span{font-size:.8rem}.tv-transport>button{min-width:2.5rem}.tv-transport #feature-clock{font-size:.55rem}}
 @media(prefers-reduced-motion:reduce){.feed-spinner{animation:none}}
+
+/* Keep TV decoding/compositing focused on the foreground clip. */
+body.tv .feed-backdrop{display:none}
+body.tv .feed-player{background:radial-gradient(ellipse at center,#183027 0,#020805 72%)}
+body.tv .feed-player .feed-glass{backdrop-filter:none;-webkit-backdrop-filter:none}

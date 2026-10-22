@@ -68,8 +68,13 @@ class ProjectTests(unittest.TestCase):
     def test_precise_montage_with_real_ffmpeg_and_audio(self):
         a,folder=self.analyze();cues=read_srt(self.cat.inputs(self.cat.get('test_story'))[1]);edl=ranges_to_edl([dict(first=1,last=1),dict(first=3,last=3)],cues)
         url=self.pipe.render(self.cat.inputs(self.cat.get('test_story'))[0],folder,edl);file=self.runtime/'artifacts'/url[len('/generated/'):]
-        info=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type','-of','json',str(file)]))
+        info=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type,codec_name,profile,level,pix_fmt,has_b_frames,width,height,r_frame_rate','-of','json',str(file)]))
         self.assertAlmostEqual(float(info['format']['duration']),sum(r['end']-r['start'] for r in edl),delta=.22);self.assertEqual({s['codec_type'] for s in info['streams']},{'video','audio'})
+        video=next(s for s in info['streams'] if s['codec_type']=='video')
+        self.assertEqual(video['codec_name'],'h264');self.assertIn(video['profile'],('Baseline','Constrained Baseline'))
+        self.assertEqual(video['level'],31);self.assertEqual(video['has_b_frames'],0);self.assertEqual(video['pix_fmt'],'yuv420p')
+        self.assertEqual((video['width'],video['height']),(960,540));self.assertEqual(video['r_frame_rate'],'24/1')
+        data=file.read_bytes();self.assertLess(data.index(b'moov'),data.index(b'mdat'))
     def test_evidence_and_refinement_guards(self):
         cues=read_srt(self.cat.inputs(self.cat.get('test_story'))[1])
         for ranges in ([dict(first=999,last=999)],[dict(first=3,last=2)],[dict(first=3,last=4),dict(first=1,last=2)]):
@@ -129,7 +134,7 @@ class ProjectTests(unittest.TestCase):
                 if result['status']!='running':break
                 time.sleep(.025)
             self.assertEqual(result['status'],'ready');self.assertTrue(result['queue']['items'])
-            with urllib.request.urlopen(urllib.request.Request(base+result['queue']['items'][0]['clip'],headers={'Range':'bytes=0-15'})) as r:self.assertEqual(r.status,206);self.assertEqual(len(r.read()),16)
+            with urllib.request.urlopen(urllib.request.Request(base+result['queue']['items'][0]['clip'],headers={'Range':'bytes=0-15'})) as r:self.assertEqual(r.status,206);self.assertEqual(len(r.read()),16);self.assertEqual(r.headers['Accept-Ranges'],'bytes');self.assertIn('private',r.headers['Cache-Control']);self.assertIn('immutable',r.headers['Cache-Control'])
             for path in ('/.env','/../server.py','/generated/../logs/ai-responses.jsonl','/inputs/test_story/movie.json'):
                 with self.assertRaises(urllib.error.HTTPError) as e:client.open(base+path)
                 self.assertEqual(e.exception.code,404)
