@@ -2,16 +2,16 @@
 """Check configured provider access without exposing credentials. Python stdlib only."""
 import argparse,json
 from pathlib import Path
-from backend.ai import make_ai,AIUnavailable,AIResponseInvalid
+from backend.ai import make_ai,AIUnavailable,AIResponseInvalid,is_configured
 from server import load_env
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--list-models',action='store_true',help='List model IDs accessible to the configured Nova key')
+    parser.add_argument('--list-models',action='store_true',help='List configured model IDs (not proof of access)')
     parser.add_argument('--test',action='store_true',help='Make one small structured-output test request (provider quotas apply)')
     args=parser.parse_args();root=Path(__file__).resolve().parent
     load_env(root);ai=make_ai(root/'runtime')
-    print(json.dumps(dict(provider=ai.label,model=ai.model,endpoint=ai.endpoint,key_environment_variable=ai.key_env,key_configured=bool(ai.key))))
+    print(json.dumps(dict(provider=ai.label,model=ai.model,endpoint=ai.endpoint,key_environment_variable=ai.key_env,key_configured=is_configured(ai))))
     try:
         if args.list_models:
             print(json.dumps(dict(available_models=ai.list_models()),ensure_ascii=False))

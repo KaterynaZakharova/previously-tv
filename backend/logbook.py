@@ -1,6 +1,7 @@
 """Persistent, source-hashed visual action annotations. No model calls during reuse.
 Full-source preprocessing is explicit; every runtime projection is watched-only.
 """
+from .ai import is_configured, supports_vision
 import copy
 import hashlib
 import json
@@ -215,8 +216,8 @@ def build(pipeline,m,progress=lambda *args:None):
     store=Logbook(pipeline.catalog);existing=store.load(m)
     if existing:return existing
     ai=pipeline.ai
-    if getattr(ai,'provider','')!='nova':raise AIUnavailable('Frame logbook requires the configured Amazon Nova vision API; text-only providers cannot inspect frames.')
-    if not ai.key:raise AIUnavailable('AI unavailable — configure NOVA_API_KEY and rerun tools/build_logbook.py. No annotations were invented.')
+    if not supports_vision(ai):raise AIUnavailable('Frame logbook requires the configured Amazon Nova vision API; text-only providers cannot inspect frames.')
+    if not is_configured(ai):raise AIUnavailable('AI unavailable — configure the selected AI mode and rerun tools/build_logbook.py. No annotations were invented.')
     ai.prepare();store.schema();key=source_key(pipeline.catalog,m)
     video,script=pipeline.catalog.inputs(m);duration=pipeline.ffprobe(video)
     cues=read_srt(script,float(m.get('transcript_offset_seconds',0))) if script else []

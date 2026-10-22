@@ -1,6 +1,7 @@
 """Scene-sized multimodal coverage, with sampled evidence and honest uncertainty.
 No film-specific scene list: intervals, frames and graph links come from inputs.
 """
+from .ai import supports_vision
 import base64
 import itertools
 import math
@@ -38,7 +39,7 @@ def analyze_scenes(pipeline,m,video,folder,duration,cues,events,progress):
         for interval in scene_intervals(b-a,local):
             intervals.append(dict(index=len(intervals),start=interval['start']+a,end=interval['end']+a))
     cast=m['characters'];castids={c['id'] for c in cast}
-    vision=getattr(pipeline.ai,'provider','')=='nova'
+    vision=supports_vision(pipeline.ai)
     references=[]
     if vision and not m.get('media_id'):
         # Six named fictional-character references plus 4 x 3 source frames = 18 images.
@@ -134,7 +135,7 @@ def analyze_scenes(pipeline,m,video,folder,duration,cues,events,progress):
 
 def recover_cast(pipeline,m,video,folder,timeline,events,cues,progress,targets=None,exclude_ranges=(),fractions=(.03,.97)):
     """Look again for underrepresented cast near interval boundaries, without invented links."""
-    if getattr(pipeline.ai,'provider','')!='nova':return [],[]
+    if not supports_vision(pipeline.ai):return [],[]
     cast=m['characters'];ids={c['id'] for c in cast}
     connected={cid for e in events for r in e['relationships'] for cid in (r['source'],r['target'])}
     photographed={c['id'] for c in cast if c.get('photo')}

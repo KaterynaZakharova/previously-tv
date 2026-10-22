@@ -6,3 +6,11 @@ android/.gradle/
 android/.idea/
 android/local.properties
 android/app/build/
+.venv/
+venv/
+.aws/
+.env.local
+.env.aws
+integrations/aws/runtime.json
+integrations/aws/iam.local.json
+.kiro/.state/

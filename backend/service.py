@@ -1,4 +1,5 @@
 """Per-viewer persistent queues. Remember is a local database operation, never AI."""
+from .ai import is_configured
 import copy
 import json
 import sqlite3
@@ -48,7 +49,7 @@ class Service:
             if job and job.get('fingerprint')!=self.catalog.fingerprint(m):job=None
         result=dict(movie=next(c for c in self.catalog.cards() if c['id']==mid),state=s,
                     analysis=(job.get('analysis') if job and job.get('analysis') else self.analysis(m)),
-                    job=job,queue=s.get('queue'),ai_configured=bool(self.ai.key),logbook_ready=bool(Logbook(self.catalog).load(m)))
+                    job=job,queue=s.get('queue'),ai_configured=is_configured(self.ai),logbook_ready=bool(Logbook(self.catalog).load(m)))
         if getattr(self,'home',None) and m.get('media_id'):
             result['analysis']=self.home.public_analysis(sid,m['media_id'],result['analysis'])
             if not self.home.transcript_visible(sid,mid):result['movie']['synopsis']=''
@@ -124,7 +125,7 @@ class Service:
         def progress(stage,message):
             with self.guard:self.jobs[jid].update(stage=stage,message=message)
         try:
-            if not self.ai.key and not Logbook(self.catalog).load(m):raise AIUnavailable('AI unavailable — try later. Configure '+getattr(self.ai,'key_env','NOVA_API_KEY')+' on the Python server.')
+            if not is_configured(self.ai) and not Logbook(self.catalog).load(m):raise AIUnavailable('AI unavailable — try later. Configure '+getattr(self.ai,'key_env','NOVA_API_KEY')+' on the Python server.')
             analysis,folder=self.pipeline.analyze(m,progress)
             if state.get('action') in ('character','pair','not_remember') or (state.get('action')=='build' and state.get('context_depth',0)>0):
                 analysis=self.pipeline.expand_context(m,analysis,folder,state,progress)

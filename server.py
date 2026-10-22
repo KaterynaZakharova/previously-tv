@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import unquote,urlsplit,parse_qs
 from backend.catalog import ROOT,inside
 from backend.service import Service
+from backend.ai import is_configured
 from backend.home import HomeService
 from backend.media_catalog import MediaCatalog
 from backend.watched_scope import scoped_cues,windows,covers
@@ -60,8 +61,8 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
                     cards=service.catalog.cards()
                     for card in cards:
                         if not home.transcript_visible(sid,card['id']):card['synopsis']=''
-                    return self.json_response(200,dict(movies=cards,logbook_ready=bool(cards) and all(c.get('logbook_ready') for c in cards),ai_configured=bool(service.ai.key),model=service.ai.model,provider=getattr(service.ai,'label','AI'),key_env=getattr(service.ai,'key_env','NOVA_API_KEY')),sid)
-                if path=='/api/library':return self.json_response(200,dict(movies=service.catalog.cards(),ai_configured=bool(service.ai.key),model=service.ai.model,provider=getattr(service.ai,'label','AI'),key_env=getattr(service.ai,'key_env','NOVA_API_KEY')),sid)
+                    return self.json_response(200,dict(movies=cards,logbook_ready=bool(cards) and all(c.get('logbook_ready') for c in cards),ai_configured=is_configured(service.ai),model=service.ai.model,provider=getattr(service.ai,'label','AI'),key_env=getattr(service.ai,'key_env','NOVA_API_KEY')),sid)
+                if path=='/api/library':return self.json_response(200,dict(movies=service.catalog.cards(),ai_configured=is_configured(service.ai),model=service.ai.model,provider=getattr(service.ai,'label','AI'),key_env=getattr(service.ai,'key_env','NOVA_API_KEY')),sid)
                 match=re.fullmatch('/api/movie/([a-z0-9_-]+)',path)
                 if match:
                     if home and not home.can_recap(sid,match[1]):return self.json_response(403,dict(error='Watch at least 12 continuous seconds before opening a recap.'),sid)

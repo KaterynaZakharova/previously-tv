@@ -1,7 +1,7 @@
 """One-time caption/edit review against ONLY the retained footage, cached in SQLite."""
 import copy,hashlib,json,math,os,sqlite3
 from datetime import datetime,timezone
-from .ai import Nova,AIUnavailable
+from .ai import Nova,AIUnavailable,is_configured
 from .catalog import read_srt
 from .logbook import obj,arr,STR,NUM,INT,RANGE,CATEGORIES
 from .scenes import frame_image
@@ -31,8 +31,8 @@ def validate(row,original,times,cues):
 
 def refine(pipeline,m,stored,progress=lambda *args:None):
     if stored.get('visual_caption_review')==2:return stored
-    if not pipeline.ai.key:raise AIUnavailable('A Nova key is needed for the one-time caption review of this new logbook.')
-    ai=Nova(pipeline.runtime,key=pipeline.ai.key,model=os.getenv('NOVA_REVIEW_MODEL','nova-pro-v1'))
+    if not is_configured(pipeline.ai):raise AIUnavailable('Configured AI credentials are needed for the one-time caption review of this new logbook.')
+    ai=pipeline.ai.reviewer() if hasattr(pipeline.ai,'reviewer') else Nova(pipeline.runtime,key=pipeline.ai.key,model=os.getenv('NOVA_REVIEW_MODEL','nova-pro-v1'))
     db=pipeline.catalog.root/'assets/db.sqlite'
     with sqlite3.connect(db) as c:c.execute('CREATE TABLE IF NOT EXISTS action_logbook_caption (unit_id TEXT,source_key TEXT,edit_key TEXT,payload TEXT,PRIMARY KEY(unit_id,source_key,edit_key))')
     video,script=pipeline.catalog.inputs(m);cues=read_srt(script) if script else []

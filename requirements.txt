@@ -1,0 +1,5 @@
+# Install system tools FFmpeg + FFprobe separately for runtime clip generation.
+# Use Python 3.10+ for AWS mode (Python 3.12 recommended).
+boto3==1.43.117
+strands-agents==1.62.0
+bedrock-agentcore==1.24.2
