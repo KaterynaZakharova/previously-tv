@@ -25,7 +25,7 @@ class AssetTests(unittest.TestCase):
         rows=self.cat.library();self.assertEqual([m['title'] for m in rows],['Tears of Steel','Spring','Sprite Fright']);self.assertEqual([len(m['episodes']) for m in rows],[3,1,1]);self.assertEqual(rows[0]['type'],'series');self.assertEqual(rows[0]['source_type'],'movie')
     def test_supplied_preview_and_character_paths_resolve(self):
         rows=self.cat.library();self.assertTrue(all(m['preview'] for m in rows));self.assertTrue(all(e['preview'] for m in rows for e in m['episodes']))
-        self.assertEqual(len(rows[0]['characters']),11);self.assertTrue(all(c['photo'] for c in rows[0]['characters']));self.assertFalse(any(c['photo'] for m in rows[1:] for c in m['characters']))
+        self.assertEqual(len(rows[0]['characters']),11);self.assertTrue(all(c['photo'] for c in rows[0]['characters']));self.assertTrue(all(c['photo'] for m in rows[1:] for c in m['characters']))
         self.assertEqual(next(c for c in rows[1]['characters'] if c['id']==11)['name'],'Spring')
     def test_normalization_is_idempotent_and_preserves_original_urls(self):
         before=[m['source_url'] for m in self.cat.library()];normalize_database(self.root);normalize_database(self.root)

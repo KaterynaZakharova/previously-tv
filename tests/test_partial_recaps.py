@@ -46,23 +46,23 @@ class PartialRecapTests(unittest.TestCase):
         h=HomeService(self.root,self.rt,demo_start=True);d=h.get('viewer');byid={p['episode_id']:p for p in d['progress']}
         self.assertEqual(byid[2]['position'],120);self.assertEqual(byid[5]['position'],80);self.assertFalse(byid[2]['completed']);self.assertFalse(byid[5]['completed'])
         for unit in ('tears_of_steel_e02','sprite_fright_e01'):self.assertTrue(h.can_recap('viewer',unit))
-        ep=d['media'][0]['episodes'][1];self.assertTrue(ep['recap_partial']);self.assertTrue(ep['recap_ready']);self.assertEqual(ep['watched_ranges'],[[0,45],[85,120]]);self.assertEqual(ep['watched_seconds'],80)
+        ep=d['media'][0]['episodes'][1];self.assertTrue(ep['recap_partial']);self.assertTrue(ep['recap_ready']);self.assertEqual(ep['watched_ranges'],[[0,120]]);self.assertEqual(ep['watched_seconds'],120)
     def test_existing_partial_episode_one_is_not_overwritten_by_demo_seed(self):
         h=HomeService(self.root,self.rt);h.save('old',dict(episode_id=1,position=38,watched_ranges=[[0,38]]))
         h=HomeService(self.root,self.rt,True);p=h.get('old')['progress'][0]
         self.assertEqual(p['position'],38);self.assertFalse(p['completed']);self.assertEqual(h.scope_manifest('old',self.catalog.get('tears_of_steel_e01'))['watched_ranges'],[[0,38]])
-    def test_seeking_changes_resume_position_but_does_not_expand_scope(self):
+    def test_seeking_changes_position_and_expands_story_scope(self):
         self.save(spans=[[0,45]],position=45);before=self.manifest()
-        self.save(spans=[],position=200);after=self.manifest();self.assertEqual(before['watched_ranges'],after['watched_ranges']);self.assertEqual(self.catalog.fingerprint(before),self.catalog.fingerprint(after))
-    def test_tiny_seek_gap_is_not_merged_or_counted_as_seen(self):
+        self.save(spans=[],position=200);after=self.manifest();self.assertEqual(after['watched_ranges'],[[0,200]]);self.assertNotEqual(self.catalog.fingerprint(before),self.catalog.fingerprint(after))
+    def test_seek_gap_is_included_before_playhead(self):
         self.save(spans=[[0,30],[30.1,60]])
-        self.assertEqual(self.manifest()['watched_ranges'],[[0,30],[30.1,60]])
-        self.assertFalse(covers(windows(self.manifest()),29,31))
-    def test_neighboring_chapter_rounding_does_not_unlock_an_unseen_fragment(self):
+        self.assertEqual(self.manifest()['watched_ranges'],[[0,60]])
+        self.assertTrue(covers(windows(self.manifest()),29,31))
+    def test_prefix_starts_at_current_chapter_beginning(self):
         self.save(spans=[[85,120]])
-        self.assertEqual(self.manifest()['watched_ranges'],[[85,120]])
-    def test_minimum_context_requires_one_contiguous_seen_window(self):
-        self.save(spans=[[0,7],[85,92]]);self.assertFalse(self.h.can_recap('viewer','tears_of_steel_e02'))
+        self.assertEqual(self.manifest()['watched_ranges'],[[0,120]])
+    def test_minimum_context_uses_playhead_not_exposure_time(self):
+        self.save(spans=[[0,2]],position=11);self.assertFalse(self.h.can_recap('viewer','tears_of_steel_e02'))
         self.save(spans=[[7,13]]);self.assertTrue(self.h.can_recap('viewer','tears_of_steel_e02'))
         self.save(eid=4,spans=[[0,30]]);self.assertTrue(self.h.can_recap('viewer','spring_e01'))
     def test_scope_hash_separates_users_and_seen_versions(self):
@@ -81,7 +81,7 @@ class PartialRecapTests(unittest.TestCase):
         self.assertEqual(clamp_ranges([dict(start=-.16,end=30.2)],spans),[dict(start=0,end=30)])
         self.assertFalse(covers(spans,20,60))
     def test_real_pipeline_only_sends_watched_cues_and_samples_seen_frames(self):
-        self.save();m=self.manifest();ai=FixtureAI();p=Pipeline(self.catalog,ai,self.rt);sampled=[];rendered=[]
+        self.save();m=dict(self.manifest(),watched_ranges=[[0,45],[85,120]]);ai=FixtureAI();p=Pipeline(self.catalog,ai,self.rt);sampled=[];rendered=[]
         def sample(video,folder,t):sampled.append(t);return 'data:image/jpeg;base64,dGVzdA=='
         def render(video,folder,ranges,progress):rendered.extend(ranges);return '/generated/fixture.mp4'
         with patch.object(p,'ffprobe',return_value=220),patch('backend.scenes.frame_image',side_effect=sample),patch.object(p,'render',side_effect=render):
@@ -110,14 +110,14 @@ class PartialRecapTests(unittest.TestCase):
         self.save(spans=[[0,45]]);s=Service(self.root,self.rt,FixtureAI());s.home=self.h;old=s.manifest('viewer','tears_of_steel_e02')
         state=initial_state();state['fingerprint']=s.catalog.fingerprint(old);state['queue']=dict(items=[dict(event_id='old')]);s.save('viewer',old['id'],state)
         self.save(spans=[[45,60]]);d=s.movie('viewer',old['id']);self.assertIsNone(d['queue']);self.assertEqual(self.h.get('viewer')['progress'][0]['position'],60)
-    def test_near_end_resume_completion_does_not_reveal_unseen_final_facts(self):
+    def test_current_cutoff_controls_completion_even_when_earlier_chapter_was_partial(self):
         media=self.h.catalog.library()[0]
         self.save(spans=[[0,219]],position=219)
         self.save(eid=3,spans=[[0,media['episodes'][2]['duration']]])
         e=self.h.get('viewer')['media'][0]['episodes'][1]
-        self.assertTrue(e['progress']['completed']);self.assertTrue(e['recap_partial']);self.assertFalse(e['watched'])
-        self.assertFalse(self.h.story_map('viewer',1)['complete'])
-        self.assertTrue(all(not c['description'] for c in self.h.story_map('viewer',1)['characters']))
+        self.assertTrue(e['progress']['completed']);self.assertFalse(e['recap_partial']);self.assertTrue(e['watched'])
+        self.assertTrue(self.h.story_map('viewer',1)['complete'])
+        self.assertTrue(all(c['description'] for c in self.h.story_map('viewer',1)['characters']))
     def test_partial_map_selection_uses_latest_seen_episode(self):
         self.save(spans=[[0,40]]);self.assertEqual(self.h.story_map('viewer',1)['recap_unit'],'tears_of_steel_e02')
     def test_partial_http_metadata_transcript_and_safe_source_preview(self):
@@ -135,7 +135,7 @@ class PartialRecapTests(unittest.TestCase):
             with self.assertRaises(urllib.error.HTTPError) as err:get('/inputs/tears_of_steel_e02/assets/tv_show/tears_of_steel/transcript/episode_02.json')
             self.assertEqual(err.exception.code,403)
             with patch.object(server.service.pipeline,'render',return_value='/generated/safe.mp4') as render:
-                for a,b in ((40,90),(120,130),(-1,20),(0,200)):
+                for a,b in ((110,130),(120,130),(-1,20),(0,200)):
                     with self.assertRaises(urllib.error.HTTPError) as err:post('/api/movie/tears_of_steel_e02/source-preview',dict(start=a,end=b))
                     self.assertEqual(err.exception.code,400)
                 render.assert_not_called()

@@ -1,6 +1,7 @@
 """Bounds shared by transcript analysis, frame sampling, clip planning and playback.
 
-Times stay episode-local; skipped and future windows never become model context.
+Times stay episode-local; story prefixes include skipped scenes before the playhead.
+The watched_ranges field is retained for compatibility with stored analyses.
 """
 import copy
 from .catalog import read_srt
@@ -59,9 +60,9 @@ def scope_timeline(timeline,spans,duration):
         result.extend(clamp_ranges([segment],spans))
     previous=0
     for a,b in spans:
-        if a>previous+EPS:result.append(dict(start=previous,end=a,category='unwatched',basis='unwatched',title='Not watched',why='Hidden until watched.'))
+        if a>previous+EPS:result.append(dict(start=previous,end=a,category='unwatched',basis='unwatched',title='After playback position',why='Hidden after your playback position.'))
         previous=max(previous,b)
-    if previous<duration-EPS:result.append(dict(start=previous,end=duration,category='unwatched',basis='unwatched',title='Not watched',why='Hidden until watched.'))
+    if previous<duration-EPS:result.append(dict(start=previous,end=duration,category='unwatched',basis='unwatched',title='After playback position',why='Hidden after your playback position.'))
     return sorted(result,key=lambda s:s['start'])
 
 

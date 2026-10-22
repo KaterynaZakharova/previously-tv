@@ -1,4 +1,4 @@
-"""Position-only history recovery; explicit modern seek gaps must stay locked."""
+"""Position-only history recovery; both old and modern positions define story cutoffs."""
 import json,shutil,sqlite3,tempfile,threading,unittest,urllib.request
 from pathlib import Path
 from backend.ai import Nova
@@ -29,18 +29,18 @@ class ProgressRecoveryTests(unittest.TestCase):
         self.legacy();h=HomeService(self.root,self.rt);h=HomeService(self.root,self.rt)
         self.assertEqual(self.episode(h)['watched_ranges'],[[0,240]]);self.assertEqual(self.episode(h,sid='other')['watched_ranges'],[])
         with sqlite3.connect(h.db) as c:self.assertEqual(c.execute("SELECT count(*) FROM watched_range WHERE sid='viewer' AND episode_id=4").fetchone()[0],1)
-    def test_existing_watched_intervals_win_over_resume_position(self):
+    def test_resume_position_defines_scope_despite_short_watched_intervals(self):
         self.legacy()
         with sqlite3.connect(self.rt/'viewers.sqlite3') as c:
             c.execute('CREATE TABLE watched_range (sid TEXT,episode_id INTEGER,start REAL,end REAL)');c.execute("INSERT INTO watched_range VALUES ('viewer',4,220,240)")
-        h=HomeService(self.root,self.rt);self.assertEqual(self.episode(h)['watched_ranges'],[[220,240]])
-    def test_modern_seek_only_save_does_not_unlock_unseen_footage_after_restart(self):
+        h=HomeService(self.root,self.rt);self.assertEqual(self.episode(h)['watched_ranges'],[[0,240]])
+    def test_modern_seek_only_save_unlocks_prefix_after_restart(self):
         h=HomeService(self.root,self.rt);h.save('viewer',dict(episode_id=4,position=240,watched_ranges=[]))
         h=HomeService(self.root,self.rt);e=self.episode(h)
-        self.assertEqual(e['progress']['position'],240);self.assertEqual(e['watched_ranges'],[]);self.assertFalse(e['recap_ready'])
-    def test_modern_partial_watch_keeps_skipped_gap_on_restart(self):
+        self.assertEqual(e['progress']['position'],240);self.assertEqual(e['watched_ranges'],[[0,240]]);self.assertTrue(e['recap_ready'])
+    def test_modern_partial_watch_includes_skipped_gap_on_restart(self):
         h=HomeService(self.root,self.rt);h.save('viewer',dict(episode_id=4,position=240,watched_ranges=[[0,15],[220,240]]))
-        h=HomeService(self.root,self.rt);self.assertEqual(self.episode(h)['watched_ranges'],[[0,15],[220,240]])
+        h=HomeService(self.root,self.rt);self.assertEqual(self.episode(h)['watched_ranges'],[[0,240]])
     def test_legacy_recovery_clamps_to_actual_asset_duration(self):
         self.legacy(position=9999);h=HomeService(self.root,self.rt);e=self.episode(h)
         self.assertEqual(e['watched_ranges'],[[0,e['duration']]])

@@ -45,9 +45,9 @@ class VoiceChatTests(unittest.TestCase):
         for i in (1,2,3):
             (self.root/('e%d.srt'%i)).write_text('1\n00:00:04,000 --> 00:00:09,000\nEarly meeting\n\n2\n00:00:31,000 --> 00:00:33,000\nLATER_SECRET\n\n3\n00:01:25,000 --> 00:01:30,000\nSKIPPED_SECRET\n')
         self.media=dict(id=1,title='A test story',episodes=self.episodes)
-        spans={1:[[0,20],[35,80]],2:[[0,18],[30,35]],3:[[0,100]]}
+        spans={1:[[0,100]],2:[[0,20]],3:[]}
         catalog=SimpleNamespace(library=lambda:[self.media],path=lambda p:self.root/p)
-        self.home=SimpleNamespace(catalog=catalog,episode_ranges=lambda sid,m,e:spans[e['id']],
+        self.home=SimpleNamespace(catalog=catalog,episode_ranges=lambda sid,m,e,at=None:spans[e['id']],
             story_map=lambda sid,mid,at:dict(characters=[dict(id='c1',name='Seen Person')],relationships=[]))
         events=[dict(id='past',title='Watched action',summary='A visible meeting.',ranges=[dict(start=10,end=15)]),
                 dict(id='bad',title='SKIPPED_ACTION_SECRET',summary='Not watched.',ranges=[dict(start=10,end=15),dict(start=85,end=90)])]
@@ -65,16 +65,16 @@ class VoiceChatTests(unittest.TestCase):
         self.assertTrue(reply['message']['citations'])
         sent=self.ai.calls[-1]
         text=json.dumps(sent)
-        self.assertNotIn('SECRET',text)
+        self.assertNotIn('story_e02:2',text);self.assertNotIn('story_e03',text)
         self.assertTrue(all(r['end']<=120 for r in sent['evidence']))
         self.chat.ask('alice',token,'What does that explain?')
         self.assertEqual(self.ai.calls[-1]['conversation'][0]['question'],'Who was at the meeting?')
 
-    def test_watched_future_scene_and_other_episodes_do_not_leak_into_earlier_context(self):
+    def test_prior_episode_is_available_but_later_current_scene_and_future_episode_stay_hidden(self):
         result=self.start();self.chat.ask('alice',result['session_id'],'Explain the story')
         self.assertFalse(any('story_e03' in r['id'] for r in self.ai.calls[-1]['evidence']))
         self.assertFalse(any('story_e02:2' in r['id'] for r in self.ai.calls[-1]['evidence']))
-        self.assertFalse(any('story_e01:2' in r['id'] for r in self.ai.calls[-1]['evidence']))
+        self.assertTrue(any('story_e01:2' in r['id'] for r in self.ai.calls[-1]['evidence']))
 
     def test_cross_viewer_and_expired_sessions_are_rejected(self):
         token=self.start()['session_id']

@@ -1,7 +1,6 @@
 """Autonomous transcript -> evidence graph -> personalized edit decisions -> FFmpeg.
 Persistent source-hashed AI action logbooks are reused when available. No identity guessing or synthetic film facts.
 """
-from .ai import supports_vision
 import copy
 import hashlib
 import json
@@ -134,7 +133,7 @@ class Pipeline:
             if cues and cues[-1]['end']>duration+1:raise ValueError('Transcript extends beyond the movie; check source version/offset')
             cast=[dict(id=c['id'],name=c['name'],actor=c.get('actor',''),identity_hint=c.get('identity_hint','')) for c in m['characters']]
             castids={c['id'] for c in cast};events=[];coverage=[];context=[]
-            nova=supports_vision(self.ai)
+            nova=getattr(self.ai,'provider','')=='nova'
             groups=[]
             for a,b in seen_windows:
                 groups.extend(chunks([c for c in cues if a<=c['start'] and c['end']<=b],limit=24000 if nova else 4200,max_span=1800 if nova else 270))
@@ -149,7 +148,7 @@ class Pipeline:
                 context.extend(e['summary'][:180] for e in new)
             if not events and not nova:raise ValueError('AI found no recap events that could be verified against the selected dialogue. No clips were invented. Try again or supply a more descriptive timed transcript.')
             relationships=[]
-            if supports_vision(self.ai):
+            if getattr(self.ai,'provider','')=='nova':
                 timeline,visual_events,relationships=analyze_scenes(self,m,video,folder,duration,cues,events,progress)
                 events.extend(visual_events)
                 recovered,extra_links=([],[]) if m.get("media_id") else recover_cast(self,m,video,folder,timeline,events,cues,progress)
@@ -213,7 +212,7 @@ class Pipeline:
             'resolve it using the transcript; do not invent an answer to satisfy the reviewer.')
         max_events=min(12,max(1,int(data.get('max_events',4))))
         instruction=instruction.format(max_events=max_events)
-        if data.get('watched_ranges'):instruction+=' Only watched portions are supplied. Gaps are unknown; never infer events or outcomes in skipped or future portions.'
+        if data.get('watched_ranges'):instruction+=' Only supplied story ranges are available. Include supported earlier scenes even if the viewer skipped them. Gaps without evidence are unknown; never infer missing events or reveal scenes after the playback cutoff.'
         schema=schemas.ANALYSIS
         if data.get('database_story'):
             instruction+=' Character identities and graph connections are managed by the supplied database. Return empty characters and relationships arrays. Do not generate character profiles or graph links; analyze story events and relevance only.'
@@ -506,7 +505,7 @@ class Pipeline:
 
     def expand_context(self,m,analysis,folder,state,progress):
         """If a selected character runs out of footage, search new source intervals."""
-        if m.get('media_id') or not supports_vision(self.ai):return analysis
+        if m.get('media_id') or getattr(self.ai,'provider','')!='nova':return analysis
         rated=next((e for e in analysis['events'] if e['id']==state['last_rated']),None)
         targets=set(state.get('pair') or ([state['character']] if state.get('character') else (rated['characters'] if rated else [])))
         if not targets:return analysis

@@ -41,12 +41,13 @@ class StoryMapTests(unittest.TestCase):
         self.watch(h,self.media['episodes'][1]);self.assertTrue(h.can_recap('viewer','tears_of_steel_e02'))
         h=HomeService(self.root,self.rt,True);d=h.get('viewer');self.assertEqual([p['episode_id'] for p in d['progress']],[2,1]);self.assertTrue(h.can_recap('viewer','tears_of_steel_e02'))
         self.assertTrue(h.get('new')['demo_start']);self.assertEqual(h.get('new')['progress'][0]['episode_id'],1)
-    def test_seek_does_not_unlock_and_rewind_does_not_hide_watched_facts(self):
+    def test_seek_unlocks_earlier_facts_and_rewind_hides_later_facts(self):
         h=HomeService(self.root,self.rt,True);before=h.story_map('viewer',1)
         e=self.media['episodes'][1];h.save('viewer',dict(episode_id=2,position=219))
-        self.assertEqual(before,h.story_map('viewer',1));self.assertFalse(h.can_recap('viewer',e['unit_id']))
-        self.watch(h,e,b=40);after=h.story_map('viewer',1);self.assertGreater(len(after['relationships']),len(before['relationships']))
-        h.save('viewer',dict(episode_id=2,position=0));self.assertEqual(after,h.story_map('viewer',1))
+        self.assertGreater(len(h.story_map('viewer',1)['relationships']),len(before['relationships']))
+        self.assertTrue(h.can_recap('viewer',e['unit_id']))
+        h.save('viewer',dict(episode_id=2,position=0))
+        self.assertEqual(before['relationships'],h.story_map('viewer',1)['relationships'])
     def test_cross_episode_relationship_uses_global_clock_not_episode_id(self):
         h=HomeService(self.root,self.rt,True);r=next(r for r in self.media['relationships'] if seconds(r['timestamp_from'])<221<seconds(r['timestamp_to'])<260)
         self.assertNotIn(r['id'],{x['id'] for x in h.story_map('viewer',1)['relationships']})
@@ -70,9 +71,9 @@ class StoryMapTests(unittest.TestCase):
         h=HomeService(self.root,self.rt);self.watch(h,self.media['episodes'][0]);self.assertTrue(h.can_recap('viewer','tears_of_steel_e01'))
         self.assertFalse(h.can_recap('someone_else','tears_of_steel_e01'))
         self.assertTrue(HomeService(self.root,self.rt).can_recap('viewer','tears_of_steel_e01'))
-    def test_skipped_middle_never_marks_episode_complete(self):
+    def test_playhead_at_end_marks_episode_complete_despite_skipped_middle(self):
         h=HomeService(self.root,self.rt);e=self.media['episodes'][0];self.watch(h,e,b=90)
-        self.assertFalse(self.watch(h,e,a=120)['completed']);self.assertTrue(h.can_recap('viewer',e['unit_id']))
+        self.assertTrue(self.watch(h,e,a=120)['completed']);self.assertTrue(h.can_recap('viewer',e['unit_id']))
         self.watch(h,e,a=90,b=120);self.assertTrue(h.can_recap('viewer',e['unit_id']))
     def test_invalid_watched_ranges_rejected(self):
         h=HomeService(self.root,self.rt)

@@ -1,4 +1,4 @@
-"""Database discovery, watched intervals, and an explicit episode-two demo seed."""
+"""Database discovery, playback-position story cutoffs, and a demo seed."""
 import copy,math,sqlite3,time,threading
 from .media_catalog import MediaCatalog
 from .story_map import merge_ranges,contains,visible_story
@@ -15,8 +15,8 @@ class HomeService:
         self.recover_legacy_progress()
     def recover_legacy_progress(self):
         """One-time recovery of position-only progress from older app releases.
-        Existing interval evidence always wins. Modern saves are marked even
-        when empty (e.g. seek-only), so restarts never infer their skipped footage.
+        Preserve actual viewing intervals for tracking. Story availability is
+        computed from saved playback position independently of these intervals.
         """
         durations={e['id']:float(e['duration'] or 0) for m in self.catalog.library() for e in m['episodes']}
         with self.guard,sqlite3.connect(self.db) as c:
@@ -43,21 +43,39 @@ class HomeService:
                     c.execute('INSERT INTO watched_range VALUES (?,?,?,?)',(sid,e['id'],0,duration))
                     c.execute('INSERT OR REPLACE INTO watch_tracking VALUES (?,?,1)',(sid,e['id']))
             self.seeded.add(sid)
-    def watched(self,sid,media):
+    def playhead(self,sid,media):
+        """Return the most recently saved source position for this title.
+
+        A seek is a story cutoff, not evidence that the intervening frames played.
+        Actual viewing intervals remain stored separately for playback tracking.
+        """
         self.seed(sid)
-        with sqlite3.connect(self.db) as c:rows=c.execute('SELECT episode_id,start,end FROM watched_range WHERE sid=?',(sid,)).fetchall()
-        eps={e['id']:e for e in media['episodes']}
-        return merge_ranges([(eps[eid]['original_start']+a,min(eps[eid]['original_start']+b,eps[eid]['original_end'] or float('inf'))) for eid,a,b in rows if eid in eps])
+        episodes={e['id']:e for e in media['episodes']}
+        if not episodes:return 0.
+        with sqlite3.connect(self.db) as c:
+            rows=c.execute('SELECT episode_id,position FROM watch_progress WHERE sid=? ORDER BY updated DESC,rowid DESC',(sid,)).fetchall()
+        for eid,position in rows:
+            if eid not in episodes:continue
+            if type(position) not in (int,float) or not math.isfinite(position):return 0.
+            e=episodes[eid]
+            return float(e['original_start'])+min(max(0.,position),float(e['duration'] or 0))
+        return 0.
+    def watched(self,sid,media,at=None):
+        # The legacy API name now represents story availability before the playhead.
+        cutoff=self.playhead(sid,media) if at is None else at
+        return merge_ranges([(e['original_start']+a,e['original_start']+b)
+            for e in media['episodes'] for a,b in self.episode_ranges(sid,media,e,at=cutoff)])
     def story_map(self,sid,mid,at=None):
         media=next((m for m in self.catalog.library() if m['id']==mid),None)
         if not media:raise KeyError('Unknown title')
-        watched=self.watched(sid,media)
-        if at is not None:
-            if type(at) not in (int,float) or not math.isfinite(at) or at<0:raise ValueError('Invalid story-map timestamp')
-            watched=[[a,min(b,at)] for a,b in watched if a<at]
+        if at is not None and (type(at) not in (int,float) or not math.isfinite(at) or at<0):
+            raise ValueError('Invalid story-map timestamp')
+        cutoff=self.playhead(sid,media)
+        if at is not None:cutoff=min(cutoff,at)
+        watched=self.watched(sid,media,at=cutoff)
         result=visible_story(media,watched)
         if at is not None:result['as_of_seconds']=at
-        eligible=[e for e in media['episodes'] if e['recap_ready'] and any(b-a>=MIN_RECAP_SECONDS for a,b in self.episode_ranges(sid,media,e))]
+        eligible=[e for e in media['episodes'] if e['recap_ready'] and any(b-a>=MIN_RECAP_SECONDS for a,b in self.episode_ranges(sid,media,e,at=cutoff))]
         result['recap_unit']=eligible[-1]['unit_id'] if eligible else None
         return result
     def public_analysis(self,sid,media_id,analysis):
@@ -70,26 +88,27 @@ class HomeService:
             event['characters']=[cid for cid in event.get('characters',[]) if cid in ids]
             event['relationships']=[r for r in event.get('relationships',[]) if (r['source'],r['target'],r['label'],r['explanation']) in allowed]
         return result
-    def episode_ranges(self,sid,media,episode):
-        self.seed(sid)
-        with sqlite3.connect(self.db) as c:
-            rows=c.execute('SELECT start,end FROM watched_range WHERE sid=? AND episode_id=?',(sid,episode['id'])).fetchall()
-        # Use this episode's own viewing records; container/audio rounding at a
-        # neighboring chapter boundary must not unlock even a fragment here.
-        duration=float(episode['duration'] or 0);result=[]
-        for a,b in merge_ranges(rows):
-            start=math.ceil(max(0,a)*1000-1e-8)/1000
-            end=math.floor(min(duration,b)*1000+1e-8)/1000
-            if end>start:result.append([start,end])
-        return result
+    def episode_ranges(self,sid,media,episode,at=None):
+        """Episode-local prefix before the current source timestamp.
+
+        Earlier chapters are available in full, the current chapter ends at its
+        playhead, and later chapters stay hidden. Round down to avoid crossing it.
+        Explicit snapshots (recap frames/voice) use their own source timestamp.
+        """
+        cutoff=self.playhead(sid,media) if at is None else at
+        if type(cutoff) not in (int,float) or not math.isfinite(cutoff) or cutoff<0:
+            raise ValueError('Invalid story timestamp')
+        duration=float(episode['duration'] or 0)
+        end=math.floor(min(duration,max(0.,cutoff-float(episode['original_start'])))*1000)/1000
+        return [[0.,end]] if end>0 else []
     def scope_manifest(self,sid,manifest):
         m=next((m for m in self.catalog.library() if m['id']==manifest.get('media_id')),None)
         if not m:return manifest
         e=next(e for e in m['episodes'] if e['id']==manifest['episode_id'])
         spans=self.episode_ranges(sid,m,e)
-        if not any(b-a>=MIN_RECAP_SECONDS for a,b in spans):raise ValueError('Watch at least 12 continuous seconds before opening a recap.')
+        if not any(b-a>=MIN_RECAP_SECONDS for a,b in spans):raise ValueError('Advance the playback position to at least 0:12 before opening a recap.')
         # A public manifest field participates in the analysis/cache fingerprint.
-        return dict(manifest,watched_ranges=spans)
+        return dict(manifest,watched_ranges=spans,story_scope='playhead-v1')
     def can_recap(self,sid,unit):
         for m in self.catalog.library():
             for e in m['episodes']:
@@ -130,7 +149,7 @@ class HomeService:
             if not isinstance(span,list) or len(span)!=2 or any(type(v) not in (int,float) or not math.isfinite(v) for v in span) or not 0<=span[0]<span[1]<=duration+.2:raise ValueError('Invalid watched range')
         with self.guard,sqlite3.connect(self.db) as c:
             old=c.execute('SELECT start,end FROM watched_range WHERE sid=? AND episode_id=?',(sid,e['id'])).fetchall()
-            ranges=merge_ranges(old+segments);complete=contains(ranges,0,max(0,duration-2))
+            ranges=merge_ranges(old+segments);complete=p>=max(0,duration-2)
             c.execute('DELETE FROM watched_range WHERE sid=? AND episode_id=?',(sid,e['id']))
             c.executemany('INSERT INTO watched_range VALUES (?,?,?,?)',[(sid,e['id'],a,min(b,duration)) for a,b in ranges])
             c.execute('INSERT OR REPLACE INTO watch_progress VALUES (?,?,?,?,?,?)',(sid,e['id'],p,duration,int(complete),time.time()))
