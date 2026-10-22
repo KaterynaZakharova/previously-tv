@@ -15,6 +15,7 @@ from .scenes import analyze_scenes,recover_cast
 from .story_map import tag_events
 from .watched_scope import windows,scoped_cues,clamp_ranges,scope_events,scope_timeline,covers,context_cues
 from .logbook import Logbook,recommend_stored
+from .recap_selection import order_for_playhead,selection_context
 from . import schemas
 from .ai import AIUnavailable, AIResponseInvalid
 
@@ -536,11 +537,8 @@ class Pipeline:
         if state['character']:candidates=[e for e in candidates if state['character'] in e['characters']]
         if state['pair']:candidates=[e for e in candidates if any(set((r['source'],r['target']))==set(state['pair']) for r in e['relationships'])]
         forgotten=[byid[k] for k,v in state['memory'].items() if v==0 and k in byid]
-        threads={t for e in forgotten for t in e['threads']}
-        def retrieval(e):return (len(set(e['threads'])&threads)*3+(2 if e['category']=='critical' else 0),-e['start'])
-        candidates=sorted(candidates,key=retrieval,reverse=True)
         if analysis.get('persistent_logbook'):return recommend_stored(self,m,analysis,folder,state,candidates,progress)
-        candidates=candidates[:18]
+        candidates=order_for_playhead(candidates,m,analysis,state)[:18]
         if not candidates:return dict(items=[],explanation='All matching evidence is remembered, or no other supported scene matches this filter.',model=self.ai.model,provider=getattr(self.ai,'label','AI'))
         cues=scoped_cues(self.catalog.inputs(m)[1],m,reader=read_srt)
         if any(e.get('visual_scene') for e in candidates):
@@ -558,14 +556,18 @@ class Pipeline:
                 'anchor_cue_ids':e.get('anchor_cue_ids') or [e['ranges'][0]['first']],
                 'context_ranges':windows_for_event,'min_clip_seconds':round(min(12,maximum),3),'cues':selected})
         if not candidate_data:return dict(items=[],explanation='Only isolated subtitle lines match this filter; there is not enough nearby dialogue for an understandable recap clip.',model=self.ai.model,provider=getattr(self.ai,'label','AI'))
-        while len(json.dumps(candidate_data,ensure_ascii=False))>12000 and len(candidate_data)>2:candidate_data.pop()
+        while len(json.dumps(candidate_data,ensure_ascii=False))>12000 and len(candidate_data)>2:
+            count=len(candidate_data)-1
+            available={e['id']:e for e in candidate_data}
+            sampled=order_for_playhead([byid[eid] for eid in available],m,analysis,state,limit=count)[:count]
+            candidate_data=[available[e['id']] for e in sampled]
         allowed={e['id']:e for e in candidate_data};schema=schemas.queue_for_candidates(allowed)
         data=dict(budget_seconds=state['budget'],memory=state['memory'],last_rated=state['last_rated'],interest=state['interest'],
-                  character=state['character'],pair=state['pair'],missing_context=[e['summary'][:180] for e in forgotten[-5:]],candidates=candidate_data)
+                  character=state['character'],pair=state['pair'],missing_context=[e['summary'][:180] for e in forgotten[-5:]],candidates=candidate_data,**selection_context(m))
         instruction=(
-            'Build an ordered recap queue of up to 5 DISTINCT events within budget_seconds. Copy event_id EXACTLY '
+            'Build an ordered recap queue of up to 5 DISTINCT events within budget_seconds. If story_cutoff_seconds is supplied, follow selection_goal: consider all story periods equally and order the initial recap chronologically from the beginning; only memory feedback may add a time preference. Never confuse skipped earlier scenes with future footage. Copy event_id EXACTLY '
             'from candidates.id, including all zeros. Never return a remembered or last-rated ID. '
-            'For Help me remember prefer different causes, earlier setup or related revelations that explain the missing context. '
+            'For Help me remember select related earlier causes and setup that explain the missing context. Do not fill with unrelated scenes or later outcomes. '
             'Honor selected character/relationship. Use the transcript start/end seconds and timecodes to plan cuts. '
             'Choose 1–4 ordered cue-ID ranges inside context_ranges (which include nearby setup/outcome beyond the narrow evidence). '
             'Include every anchor_cue_id and at least min_clip_seconds per clip; be 7–45s TOTAL, ideally 7–30s of essential action and context. '
@@ -598,6 +600,7 @@ class Pipeline:
             clip=self.render(self.catalog.inputs(m)[0],folder,item['ranges'],progress)
             queue.append(dict(item,clip=clip))
         if issues:explanation+=' Some proposed edits were omitted because they failed validation.'
+        if not any(v==0 for v in state['memory'].values()):queue.sort(key=lambda item:item['ranges'][0]['start'])
         return dict(items=queue,explanation=explanation,model=self.ai.model,provider=getattr(self.ai,'label','AI'),total_seconds=round(sum(x['duration'] for x in queue),2))
     def recommend_seconds(self,m,analysis,folder,state,candidates,cues,progress):
         """One planner for dialogue edits AND genuine silent visual scenes."""
@@ -617,9 +620,9 @@ class Pipeline:
         if not allowed:return dict(items=[],explanation='No new verified scene is available for this selection.',model=self.ai.model,provider=getattr(self.ai,'label','AI'))
         data=dict(candidates=payload,budget_seconds=state['budget'],character=state['character'],pair=state['pair'],
             missing_context=[e['summary'] for e in analysis['events'] if state['memory'].get(e['id'])==0][-5:],
-            context_depth=state.get('context_depth',0),previous_source_ranges=[r for item in history for r in item['ranges']])
-        instruction=('Select up to 3 NEW useful contextual clips. Honor the character or pair filter strictly. '
-            'For a missing memory, prefer a DIFFERENT scene giving causes, setup or the outcome; deeper context_depth means more background. '
+            context_depth=state.get('context_depth',0),previous_source_ranges=[r for item in history for r in item['ranges']],**selection_context(m))
+        instruction=('Select up to 3 NEW useful contextual clips. If story_cutoff_seconds is supplied, follow selection_goal: consider all story periods equally and present the initial recap in chronological order; only memory feedback may add a time preference. Honor the character or pair filter strictly. '
+            'For a missing memory, select DIFFERENT related earlier scenes giving causes and setup; deeper context_depth means more background. Do not fill with unrelated scenes or later outcomes. '
             'Use only candidate IDs and source start/end seconds inside allowed_ranges. Each clip must contain every anchor_dialogue '
             'in full, be at least min_seconds, and be 7–45 seconds TOTAL, ideally 7–30 seconds including action setup and outcome. '
             'A visual scene must include at least one of its supplied frame_times; those frames support the identity claim. '
@@ -674,6 +677,7 @@ class Pipeline:
             progress('editing','Cutting new context · '+allowed[item['event_id']]['title'])
             if not all(covers(windows(m),r['start'],r['end']) for r in item['ranges']):raise ValueError('Clip escaped the watched portions')
             items.append(dict(item,clip=self.render(self.catalog.inputs(m)[0],folder,item['ranges'],progress)))
+        if not any(v==0 for v in state['memory'].values()):items.sort(key=lambda item:item['ranges'][0]['start'])
         return dict(items=items,explanation=explanation,model=self.ai.model,provider=getattr(self.ai,'label','AI'),total_seconds=round(sum(x['duration'] for x in items),2))
 
     def render(self,video,folder,ranges,progress=lambda *args:None):

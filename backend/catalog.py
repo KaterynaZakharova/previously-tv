@@ -43,7 +43,7 @@ class Catalog:
     def fingerprint(self,m):
         video,script=self.inputs(m)
         clean={k:v for k,v in m.items() if not k.startswith('_')}
-        h=hashlib.sha256(b'previously-analysis-v11-tv-h264\0'+json.dumps(clean,sort_keys=True).encode()+(script.read_bytes() if script else b'no-transcript'))
+        h=hashlib.sha256(b'previously-analysis-v13-neutral-chronological\0'+json.dumps(clean,sort_keys=True).encode()+(script.read_bytes() if script else b'no-transcript'))
         from .logbook import Logbook
         stored=Logbook(self).load(m)
         if stored:

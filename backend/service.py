@@ -66,6 +66,7 @@ class Service:
             state['memory'][eid]=1 if kind=='remember' else 0;state['last_rated']=eid
             if kind=='not_remember':state['context_depth']+=1
             if state.get('queue'):
+                state['queue']['context_event_ids']=[]
                 state['queue']['items']=[q for q in state['queue']['items'] if q['event_id']!=eid]
                 state['queue']['total_seconds']=round(sum(q['duration'] for q in state['queue']['items']),2)
             state['revision']+=1;self.save(sid,mid,state)
@@ -131,16 +132,22 @@ class Service:
             if getattr(self,'home',None) and m.get('media_id'):analysis=self.home.public_analysis(sid,m['media_id'],analysis)
             with self.guard:self.jobs[jid]['analysis']=analysis
             prior=copy.deepcopy(state.get('queue'))
-            # The same footage must not be offered again under a different event title.
-            state['exclude_event_ids']=[q['event_id'] for q in state.get('clip_history',[])]
-            fresh=self.pipeline.recommend(m,analysis,folder,state,progress)
-            pending=prior['items'] if prior else [];new=[];ids={q['event_id'] for q in pending}
+            pending=prior['items'] if prior else []
+            pending_ids={q['event_id'] for q in pending}
+            recommendation=copy.deepcopy(state)
+            # Prepared-but-unplayed clips may already contain the right prequel.
+            # Permit promoting those clips instead of treating them as viewed.
+            allowed_pending=pending_ids if state['action']=='not_remember' else set()
+            recommendation['exclude_event_ids']=[q['event_id'] for q in state.get('clip_history',[]) if q['event_id'] not in allowed_pending]
+            recommendation['clip_history']=[q for q in state.get('clip_history',[]) if q['event_id'] not in allowed_pending]
+            fresh=self.pipeline.recommend(m,analysis,folder,recommendation,progress)
+            new=[];ids=set(pending_ids)
             for q in fresh['items']:
                 if q['event_id'] not in ids:new.append(q);ids.add(q['event_id'])
-            # Missing memory gets new explanations first. Map selections append and keep playback.
-            items=(new+pending) if state['action']=='not_remember' else (pending+new)
-            queue=dict(fresh,items=items,total_seconds=round(sum(q['duration'] for q in items),2))
-            if not new and prior:queue['explanation']='No additional verified scene is available for this selection. Your remaining queue is kept. '+fresh['explanation']
+            context_ids=[q['event_id'] for q in fresh['items']] if state['action']=='not_remember' else []
+            items=(fresh['items']+[q for q in pending if q['event_id'] not in set(context_ids)]) if context_ids else (pending+new)
+            queue=dict(fresh,items=items,context_event_ids=context_ids,total_seconds=round(sum(q['duration'] for q in items),2))
+            if not new and not context_ids and prior:queue['explanation']='No additional verified scene is available for this selection. Your remaining queue is kept. '+fresh['explanation']
             state.pop('exclude_event_ids',None);state['queue']=queue
             history={q['event_id']:q for q in state.get('clip_history',[])}
             history.update({q['event_id']:q for q in new});state['clip_history']=list(history.values())

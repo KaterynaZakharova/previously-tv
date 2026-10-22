@@ -64,7 +64,7 @@ class LogbookTests(unittest.TestCase):
             q=recommend_stored(self.pipeline,dict(self.m,watched_ranges=[[0,30]]),self.stored(events),self.root,initial_state(),events,lambda *a:None)
         self.assertEqual(q['items'],[]);render.assert_not_called()
     def test_forgetting_prioritizes_related_fresh_actions_without_repeated_footage(self):
-        old=self.event('old',10,20,['goal']);related=self.event('related',40,50,['goal']);other=self.event('other',65,75,['other'])
+        old=self.event('old',40,50,['goal']);related=self.event('related',10,20,['goal']);other=self.event('other',65,75,['other'])
         state=initial_state();state['memory']={'old':0};state['last_rated']='old';state['clip_history']=[dict(event_id='old',ranges=old['ranges'])]
         with patch.object(self.pipeline,'render',return_value='/generated/fixture.mp4'):
             q=recommend_stored(self.pipeline,self.m,self.stored([old,related,other]),self.root,state,[related,other],lambda *a:None)

@@ -14,6 +14,7 @@ from .catalog import read_srt
 from .scenes import frame_image
 from .story_map import tag_events
 from .watched_scope import covers, windows, scope_timeline
+from .recap_selection import order_for_playhead
 
 VERSION=1
 SOURCE_CACHE={}
@@ -274,24 +275,36 @@ def build(pipeline,m,progress=lambda *args:None):
 
 
 def recommend_stored(pipeline,m,analysis,folder,state,candidates,progress):
-    """Personalize already AI-authored edits locally: no LLM/key required."""
+    """Select across the whole story; only memory feedback adds time preference."""
     forgotten=[e for e in analysis['events'] if state['memory'].get(e['id'])==0]
-    threads={t for e in forgotten for t in e['threads']};focus=forgotten[-1] if forgotten else None
-    def rank(e):
-        relation=len(set(e['threads'])&threads)*4
-        distance=abs(e['start']-focus['start']) if focus else e['start']
-        return (-relation,-(2 if e['category']=='critical' else 1),distance,e['start'])
-    items=[];used=0;history=state.get('clip_history',[])
-    for e in sorted(candidates,key=rank):
-        ranges=e['ranges'];length=sum(r['end']-r['start'] for r in ranges)
-        if not 7-.001<=length<=45+.001 or used+length>state['budget']:continue
-        if not covers(windows(m),e['start'],e['end']) or not all(covers(windows(m),r['start'],r['end']) for r in ranges):continue
-        if any(sum(max(0,min(a['end'],b['end'])-max(a['start'],b['start'])) for a in ranges for b in old['ranges'])>.7*min(length,sum(r['end']-r['start'] for r in old['ranges'])) for old in history+items):continue
+    threads={t for e in forgotten for t in e['threads']}
+    focus=next((e for e in forgotten if e['id']==state.get('last_rated')),forgotten[-1] if forgotten else None)
+    history=state.get('clip_history',[])
+    def length(e):return sum(r['end']-r['start'] for r in e['ranges'])
+    def overlaps(event,other):
+        amount=sum(max(0,min(a['end'],b['end'])-max(a['start'],b['start'])) for a in event['ranges'] for b in other['ranges'])
+        return amount>.7*min(length(event),length(other))
+    eligible=[e for e in candidates if 7-.001<=length(e)<=45+.001 and length(e)<=state['budget']
+        and covers(windows(m),e['start'],e['end'])
+        and all(covers(windows(m),r['start'],r['end']) for r in e['ranges'])
+        and not any(overlaps(e,old) for old in history)]
+    # If five edits exceed the budget, resample fewer across the WHOLE prefix
+    # rather than cutting the later story off the end of a chronological list.
+    selected=[]
+    for count in range(min(5,len(eligible)),0,-1):
+        proposal=[]
+        for event in order_for_playhead(eligible,m,analysis,state,limit=count):
+            if not any(overlaps(event,old) for old in proposal):proposal.append(event)
+            if len(proposal)>=count:break
+        if sum(length(e) for e in proposal)<=state['budget']:
+            selected=proposal;break
+    selected.sort(key=lambda e:e['start'])
+    items=[]
+    for e in selected:
+        ranges=e['ranges']
         reason=e['why']+(' Related context for a moment you did not remember.' if focus and set(e['threads'])&threads else '')
         progress('editing','Assembling stored action moments · '+e['title'])
-        items.append(dict(event_id=e['id'],ranges=copy.deepcopy(ranges),duration=round(length,3),reason=reason,
+        items.append(dict(event_id=e['id'],ranges=copy.deepcopy(ranges),duration=round(length(e),3),reason=reason,
             clip=pipeline.render(pipeline.catalog.inputs(m)[0],folder,ranges,progress)))
-        used+=length
-        if len(items)>=5:break
-    return dict(items=items,total_seconds=round(used,3),explanation='Reused the saved AI visual logbook. Ranked unseen, unremembered edits by related story threads, plot importance and source proximity; respected character/relationship filters and excluded repeated footage.',
+    return dict(items=items,total_seconds=round(sum(i['duration'] for i in items),3),explanation='Reused the saved AI visual logbook. Considered all available story periods equally and ordered the initial recap chronologically. Remember / Not remember feedback changes which story context receives attention; character/relationship filters and repeated-footage exclusions remain enforced.',
         model=analysis['model'],provider=analysis['provider'],selection_mode='local ranking of persistent AI edits')
