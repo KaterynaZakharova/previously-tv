@@ -12,7 +12,9 @@ from pathlib import Path
 from urllib.parse import unquote,urlsplit,parse_qs
 from backend.catalog import ROOT,inside
 from backend.service import Service
-from backend.ai import is_configured
+from backend.ai import is_configured, AIUnavailable, AIResponseInvalid
+from backend.chat import Chat
+from backend.voice import Speech
 from backend.home import HomeService
 from backend.media_catalog import MediaCatalog
 from backend.watched_scope import scoped_cues,windows,covers
@@ -31,6 +33,7 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
     root=Path(root);load_env(root);service=Service(root,runtime,ai)
     home=HomeService(root,service.runtime,demo_start=True) if (root/'assets/db.sqlite').is_file() else None
     service.home=home
+    chat=Chat(service,home);speech=Speech(service.ai)
     class Handler(BaseHTTPRequestHandler):
         protocol_version='HTTP/1.1'
         def session(self):
@@ -44,7 +47,9 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
             if sid:self.send_header('Set-Cookie',f'viewer={sid}; HttpOnly; SameSite=Lax; Path=/; Max-Age=31536000')
             if code>=400:self.close_connection=True;self.send_header('Connection','close')
             self.end_headers()
-            if self.command!='HEAD':self.wfile.write(body)
+            if self.command!='HEAD':
+                try:self.wfile.write(body)
+                except (BrokenPipeError,ConnectionResetError):pass
         def do_HEAD(self):self.do_GET()
         def do_GET(self):
             path=urlsplit(self.path).path;sid=self.session()
@@ -95,14 +100,23 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
             except (ValueError,KeyError,IndexError):return self.json_response(404,dict(error='Not found'))
         def do_POST(self):
             path=urlsplit(self.path).path;match=re.fullmatch('/api/movie/([a-z0-9_-]+)/(action|source-preview|signal)',path)
-            if not match and path!='/api/progress':return self.json_response(404,dict(error='Unknown endpoint'))
+            chat_action=re.fullmatch('/api/chat/(start|ask|finish|speak|transcribe)',path)
+            if not match and not chat_action and path!='/api/progress':return self.json_response(404,dict(error='Unknown endpoint'))
             if self.headers.get('Origin') and urlsplit(self.headers['Origin']).netloc!=self.headers.get('Host'):return self.json_response(403,dict(error='Cross-origin request blocked'))
             try:
                 n=int(self.headers.get('Content-Length','0'))
-                if not 0<n<=16384:raise ValueError('Invalid body size')
+                if not 0<n<=(950000 if chat_action and chat_action[1]=='transcribe' else 16384):raise ValueError('Invalid body size')
                 data=json.loads(self.rfile.read(n))
                 if not isinstance(data,dict):raise ValueError('Expected JSON object')
                 sid=self.session()
+                if chat_action:
+                    action=chat_action[1]
+                    if action=='start':return self.json_response(200,dict(**chat.start(sid,data.get('context')),speech=speech.capabilities()),sid)
+                    if action=='ask':return self.json_response(200,chat.ask(sid,data.get('session_id'),data.get('question')),sid)
+                    if action=='finish':return self.json_response(200,chat.finish(sid,data.get('session_id')),sid)
+                    if action=='speak':return self.json_response(200,speech.synthesize(chat.speech_text(sid,data.get('session_id'),data.get('message_id'))),sid)
+                    chat._owned(sid,data.get('session_id'))
+                    return self.json_response(200,speech.transcribe(data.get('audio_base64')),sid)
                 if path=='/api/progress':
                     if not home:raise KeyError('No home catalog')
                     return self.json_response(200,home.save(sid,data),sid)
@@ -115,7 +129,8 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
                     clip=service.pipeline.render(video,folder,[dict(start=a,end=b)])
                     return self.json_response(200,dict(clip=clip),sid)
                 return self.json_response(202,service.start(sid,match[1],data),sid)
-            except KeyError:return self.json_response(404,dict(error='Unknown movie'))
+            except (AIUnavailable,AIResponseInvalid) as e:return self.json_response(503,dict(error=str(e)))
+            except KeyError:return self.json_response(404,dict(error='Unknown or expired session/media'))
             except (ValueError,TypeError) as e:return self.json_response(400,dict(error=str(e)))
         def send_file(self,file):
             size=file.stat().st_size;start,end=0,size-1;status=200
@@ -142,7 +157,7 @@ def create_server(host='127.0.0.1',port=8000,root=ROOT,runtime=None,ai=None):
             except (BrokenPipeError,ConnectionResetError):pass
         def bad_range(self,size):
             self.send_response(416);self.send_header('Content-Range',f'bytes */{size}');self.send_header('Content-Length','0');self.end_headers()
-    server=ThreadingHTTPServer((host,port),Handler);server.service=service;server.home=home;return server
+    server=ThreadingHTTPServer((host,port),Handler);server.service=service;server.home=home;server.chat=chat;return server
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--host',default='127.0.0.1');parser.add_argument('--port',type=int,default=8000);args=parser.parse_args()

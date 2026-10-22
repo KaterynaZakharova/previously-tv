@@ -27,3 +27,11 @@ Backspace/Escape for Back. See the root README section 2.
 Fire OS only. This Android APK is not a Vega OS build. LAN HTTP is enabled for
 development. The root VALIDATION.md states whether compilation/device tests were
 possible in the delivery environment.
+
+## Voice chat (version 2.1)
+
+Rebuild/reinstall the APK for the new native speech bridge and microphone permission.
+Hold OK for 0.7 seconds to open chat; a short OK activates on release. The standard
+Alexa microphone button remains owned by the Fire TV system. See
+[the voice guide](../docs/VOICE_CHAT.md) for supported device speech, an optional
+app-accessible microphone + AWS Transcribe path, Polly output and test steps.

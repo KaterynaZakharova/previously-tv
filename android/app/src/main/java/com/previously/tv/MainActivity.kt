@@ -3,6 +3,10 @@ package com.previously.tv
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.net.Uri
+import android.webkit.WebResourceRequest
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -13,6 +17,17 @@ import android.widget.EditText
 
 class MainActivity : Activity() {
     private lateinit var web: WebView
+    private lateinit var voice: VoiceBridge
+    private var serverOrigin: String? = null
+    private val keyHandler = Handler(Looper.getMainLooper())
+    private var centerPending = false
+    private var centerLong = false
+    private val centerVoice = Runnable {
+        if (centerPending) {
+            centerLong = true
+            js("window.PreviouslyTV && window.PreviouslyTV.voice()")
+        }
+    }
     private val preferences by lazy { getSharedPreferences("previously", MODE_PRIVATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,13 +39,28 @@ class MainActivity : Activity() {
         web.settings.mediaPlaybackRequiresUserGesture = false
         web.settings.useWideViewPort = true
         web.settings.loadWithOverviewMode = true
-        web.webViewClient = WebViewClient()
+        voice = VoiceBridge(this, { trustedPage() }) { event ->
+            js("window.VoiceChat && window.VoiceChat.nativeEvent(" + event.toString() + ")")
+        }
+        web.addJavascriptInterface(voice, "PreviouslyVoice")
+        web.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                return !sameOrigin(request.url)
+            }
+        }
         web.webChromeClient = WebChromeClient()
         setContentView(web)
         val url = preferences.getString("serverUrl", null)
         if (url == null) configureServer() else loadServer(url)
     }
+    private fun sameOrigin(uri: Uri): Boolean {
+        val origin = serverOrigin?.let { Uri.parse(it) } ?: return false
+        return uri.scheme == origin.scheme && uri.host == origin.host && uri.port == origin.port
+    }
+    private fun trustedPage() = web.url?.let { sameOrigin(Uri.parse(it)) } == true
     private fun loadServer(url: String) {
+        voice.stopOnMain()
+        serverOrigin = url.trim().trimEnd('/')
         val target = url.trim().trimEnd('/') + "/?tv=1"
         web.loadUrl(target)
         web.requestFocus()
@@ -52,6 +82,8 @@ class MainActivity : Activity() {
     }
     private fun js(code: String) { web.evaluateJavascript(code, null) }
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (voice.textEntryFocused && keyCode != KeyEvent.KEYCODE_BACK && keyCode != KeyEvent.KEYCODE_MENU)
+            return super.onKeyDown(keyCode, event)
         val direction = when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> "left"
             KeyEvent.KEYCODE_DPAD_RIGHT -> "right"
@@ -61,7 +93,17 @@ class MainActivity : Activity() {
         }
         if (direction != null) { if (event.repeatCount > 0) return true; js("window.PreviouslyTV && window.PreviouslyTV.navigate('$direction')"); return true }
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> { if (event.repeatCount > 0) return true; js("window.PreviouslyTV && window.PreviouslyTV.activate()"); return true }
+            KeyEvent.KEYCODE_VOICE_ASSIST, KeyEvent.KEYCODE_ASSIST, KeyEvent.KEYCODE_SEARCH -> {
+                if (event.repeatCount == 0) js("window.PreviouslyTV && window.PreviouslyTV.voice()")
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                if (event.repeatCount == 0) {
+                    centerPending = true; centerLong = false
+                    keyHandler.postDelayed(centerVoice, 700)
+                }
+                return true
+            }
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> { js("window.PreviouslyTV && window.PreviouslyTV.togglePlayback()"); return true }
             KeyEvent.KEYCODE_MEDIA_NEXT -> { js("window.PreviouslyTV && window.PreviouslyTV.next()"); return true }
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> { js("window.PreviouslyTV && window.PreviouslyTV.previous()"); return true }
@@ -76,7 +118,21 @@ class MainActivity : Activity() {
         }
         return super.onKeyDown(keyCode, event)
     }
-    override fun onPause() { js("document.querySelectorAll('video').forEach(v=>v.pause())"); web.onPause(); super.onPause() }
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        if (centerPending && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+            keyHandler.removeCallbacks(centerVoice)
+            centerPending = false
+            if (!centerLong) js("window.PreviouslyTV && window.PreviouslyTV.activate()")
+            return true
+        }
+        return super.onKeyUp(keyCode, event)
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == VoiceBridge.AUDIO_PERMISSION)
+            voice.permissionResult(grantResults.firstOrNull() == android.content.pm.PackageManager.PERMISSION_GRANTED)
+    }
+    override fun onPause() { keyHandler.removeCallbacks(centerVoice); centerPending = false; voice.stopOnMain(); js("window.VoiceChat && window.VoiceChat.suspend()"); js("document.querySelectorAll('video').forEach(v=>v.pause())"); web.onPause(); super.onPause() }
     override fun onResume() { super.onResume(); if (::web.isInitialized) web.onResume() }
-    override fun onDestroy() { web.destroy(); super.onDestroy() }
+    override fun onDestroy() { voice.destroy(); web.removeJavascriptInterface("PreviouslyVoice"); web.destroy(); super.onDestroy() }
 }
