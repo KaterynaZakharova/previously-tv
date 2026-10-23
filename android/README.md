@@ -25,8 +25,7 @@ Laptop equivalents: arrows, Enter/Space, M/ContextMenu/F10 for Menu, and
 Backspace/Escape for Back. See the root README section 2.
 
 Fire OS only. This Android APK is not a Vega OS build. LAN HTTP is enabled for
-development. The root VALIDATION.md states whether compilation/device tests were
-possible in the delivery environment.
+development.
 
 ## Voice chat (version 2.1)
 

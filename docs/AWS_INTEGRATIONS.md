@@ -1,6 +1,6 @@
 # Implemented AWS integrations
 
-The default remains local. AWS mode is opt-in through `RUN_MODE=aws`. No resource is deployed or job submitted on server startup.
+The default remains local. AWS mode is opt-in through `PREVIOUSLY_RUN_MODE=aws`. No resource is deployed or job submitted on server startup.
 
 | Integration | Implemented files | Purpose / when used |
 |---|---|---|
@@ -42,7 +42,7 @@ S3 snapshots intentionally exclude runtime, logs, dotfiles and `assets/analysis`
 
 | Variable | Default / meaning |
 |---|---|
-| `RUN_MODE` | `local`; accepts `local`, `aws` |
+| `PREVIOUSLY_RUN_MODE` | `local`; accepts `local`, `aws` |
 | `AWS_AI_ENGINE` | `strands`; accepts `bedrock`, `strands`, `agentcore` |
 | `AWS_REGION` | `us-east-1`; `AWS_DEFAULT_REGION` also supported |
 | `AWS_PROFILE` | Optional standard boto3 profile selection; omit inside AWS roles |
@@ -66,3 +66,7 @@ AWS SDKs are lazy imports. Local mode retains stdlib-only Python 3.9 support. AW
 - [SageMaker Processing](https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html)
 
 These integrations are implemented and locally tested; live-account deployment, model access, regional availability and real-cloud quotas must be verified with your credentials. See [AWS_VALIDATION.md](AWS_VALIDATION.md).
+
+## Voice chatbot extension
+
+[VOICE_CHAT.md](VOICE_CHAT.md) documents the added Nova Q&A task, device/browser speech, optional Polly output and Transcribe/S3 audio input. Chat uses the same selected Nova transport and existing watched evidence, with viewer-owned ephemeral sessions. Speech services are optional and configured separately from the inference engine.

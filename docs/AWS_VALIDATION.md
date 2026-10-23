@@ -30,3 +30,7 @@ With AWS dependencies installed, run the same Python command to include the six 
 Bedrock model/regional access, actual multimodal model behavior on a new source, the ARM64/AMD64 Docker builds, ECR image pulls, role permissions, live AgentCore latency/log collection, and a complete SageMaker Processing run. Docker/cloud deployment were not executed here. Existing prepared catalog recaps intentionally bypass fresh inference, so use logs and the connection test to distinguish stored output from a new provider response.
 
 The SDK and deterministic tests establish request/response compatibility and app behavior, not the factual quality of every future model response. Existing evidence, watched-range and clip validators remain enabled in either mode.
+
+## Voice extension validation
+
+The extended project passes 228 Python tests with the optional AWS packages installed, including the thirteen voice/backend/speech tests. Without those packages, six SDK-only checks are skipped. Five Node interaction harnesses pass, including `tests/voice_ui_smoke.cjs` and a real-feed pause/dwell check. No live Nova/Polly/Transcribe call was made. Android source/manifest are supplied but compilation was blocked by the Gradle distribution network download; see [VOICE_CHAT.md](VOICE_CHAT.md).
