@@ -83,6 +83,11 @@ The Alexa remote microphone belongs to Alexa. App voice input needs a supported 
 ## Installation and run
 
 Run from the repository root in an activated Python environment, with FFmpeg/FFprobe and the prepared `assets/` available. Local live AI needs `NOVA_API_KEY` in `.env`; AWS needs configured credentials and a region/model accessible to your account.
+### Download Fire TV APK
+[Download Previously TV APK](https://github.com/KaterynaZakharova/previously-tv/releases/download/v1.0.0/app-debug.apk)
+Install the APK on a Fire TV device using ADB.
+
+Or build APK yourself:
 
 ### Build the APK
 
