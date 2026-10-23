@@ -54,8 +54,25 @@ class QueueTests(unittest.TestCase):
         j=self.action('build');seen={q['event_id'] for q in j['queue']['items']}
         for _ in range(3):
             prior=j['queue']['items'];rated=prior[0]['event_id'];j=self.action('not_remember',event_id=rated)
-            self.assertEqual(j['queue']['items'][len(j['added_event_ids']):],prior[1:]);self.assertTrue(j['added_event_ids']);self.assertFalse(seen&set(j['added_event_ids']));seen.update(j['added_event_ids'])
+            context=j['queue']['context_event_ids'];ids=[q['event_id'] for q in j['queue']['items']]
+            self.assertEqual(ids[:len(context)],context)
+            self.assertEqual(ids[len(context):],[q['event_id'] for q in prior[1:] if q['event_id'] not in context])
+            self.assertEqual(len(ids),len(set(ids)));self.assertFalse(seen&set(j['added_event_ids']));seen.update(j['added_event_ids'])
         self.assertEqual(j['state']['context_depth'],3)
+    def test_prequel_promotes_prepared_clip_and_preserves_remaining_fifo(self):
+        self.action('build');prior=self.action('character',character='c')['queue']['items']
+        promoted=prior[-1];extra=dict(promoted,event_id='e10')
+        def recommend(m,a,folder,state,progress):
+            self.assertNotIn(promoted['event_id'],state['exclude_event_ids'])
+            self.assertNotIn(promoted['event_id'],{q['event_id'] for q in state['clip_history']})
+            self.assertIn(prior[0]['event_id'],state['exclude_event_ids'])
+            return dict(items=[promoted,extra],explanation='Fixture prequels')
+        self.s.pipeline.recommend=recommend
+        job=self.action('not_remember',event_id=prior[0]['event_id'])
+        self.assertEqual(job['queue']['context_event_ids'],[promoted['event_id'],'e10'])
+        self.assertEqual(job['queue']['items'],[promoted,extra]+prior[1:-1])
+        self.assertEqual(job['added_event_ids'],['e10'])
+
     def test_failed_ai_keeps_pending_queue_and_remember_still_works(self):
         j=self.action('build');old=j['queue']['items'];self.ai.key='';job=self.s.start('viewer','story',dict(type='character',character='c'))
         for _ in range(100):

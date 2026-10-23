@@ -25,7 +25,7 @@ body.tv .hero-switcher{bottom:3vh}
 /* Quiet forest theme and one clear viewing decision. */
 :root{--accent:#6fa98c;--accent2:#a6c9b5;--bg:#091310;--panel:#11251db8;--line:#9dc1ac25;--muted:#a1b3a9}
 body{background:#091310}.home-mode .home-header{background:linear-gradient(#07100de6,transparent)}
-.hero-meta,.hero-switcher,.hero-footnote,#continue-section,.section-index,.shelf-hint,.collection-count,.home-footer>p,.footer-wordmark{display:none!important}
+.section-index,.shelf-hint{display:none!important}
 .home-hero,body.tv .home-hero{height:65vh;min-height:490px;max-height:800px}
 .hero-content,body.tv .hero-content{padding-top:18vh;width:60vw}
 #hero-title,body.tv .hero-content #hero-title{text-transform:none;font-size:clamp(3.4rem,5.7vw,6.5rem);font-weight:650;line-height:1.02;letter-spacing:-.055em;margin:.8rem 0 1rem}
